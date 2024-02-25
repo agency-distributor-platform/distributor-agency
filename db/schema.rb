@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_25_182925) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_25_203432) do
   create_table "agencies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -18,6 +18,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_25_182925) do
     t.string "uuid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["email"], name: "agencies_unique_email", unique: true
   end
 
   create_table "buyers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -33,7 +34,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_25_182925) do
     t.text "metadata"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "email"
+    t.string "phone"
     t.index ["agency_id"], name: "fk_rails_216df4e8fd"
+    t.index ["email"], name: "distributors_unique_email", unique: true
   end
 
   create_table "item_selling_records", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -53,12 +57,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_25_182925) do
     t.string "name"
     t.string "email"
     t.string "phone"
-    t.string "item_type"
-    t.bigint "item_id"
+    t.string "employer_type"
+    t.bigint "employer_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "password"
-    t.index ["email"], name: "users_unique_email"
+    t.index ["email"], name: "users_unique_email", unique: true
   end
 
   create_table "vehicle_models", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -87,9 +91,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_25_182925) do
     t.float "selling_price"
     t.string "selling_price_visibility_status"
     t.index ["agency_id"], name: "fk_rails_bc1c0879fa"
-    t.index ["chassis_id"], name: "vehicles_unique_chassis_id"
-    t.index ["engine_id"], name: "vehicles_unique_engine_id"
-    t.index ["registration_id"], name: "vehicles_unique_registration_id"
+    t.index ["chassis_id"], name: "vehicles_unique_chassis_id", unique: true
+    t.index ["engine_id"], name: "vehicles_unique_engine_id", unique: true
+    t.index ["registration_id"], name: "vehicles_unique_registration_id", unique: true
     t.index ["vehicle_model_id"], name: "fk_rails_83f60c4d50"
   end
 

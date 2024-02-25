@@ -6,7 +6,7 @@ class AddUniqueRegistrationId < ActiveRecord::Migration[7.0]
   COLUMNS = [:registration_id, :chassis_id, :engine_id]
   def up
     COLUMNS.each { |column|
-      add_index_to_columns(TABLE_NAME, column, {name: index_name(column)})
+      add_index_to_columns(TABLE_NAME, column, {name: index_name(column), unique: true})
     }
   end
 
