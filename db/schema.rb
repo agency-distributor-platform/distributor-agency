@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_25_173426) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_25_182925) do
   create_table "agencies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -41,8 +41,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_25_173426) do
     t.bigint "item_id"
     t.bigint "agency_id"
     t.bigint "buyer_id"
-    t.float "selling_price"
-    t.string "selling_price_visibility_status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "distributor_id"
@@ -86,6 +84,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_25_173426) do
     t.string "stock_entry_date"
     t.text "comments"
     t.string "location"
+    t.float "selling_price"
+    t.string "selling_price_visibility_status"
     t.index ["agency_id"], name: "fk_rails_bc1c0879fa"
     t.index ["chassis_id"], name: "vehicles_unique_chassis_id"
     t.index ["engine_id"], name: "vehicles_unique_engine_id"
