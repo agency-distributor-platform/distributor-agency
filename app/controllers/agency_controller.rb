@@ -75,7 +75,7 @@ class AgencyController < AuthenticationController
   end
 
   def vehicle_params
-    params.require(:vehicle_details).permit(:id, :name, :registration_id, :chassis_id, :engine_id, :manufacturing_year, :cost_price, :cost_price_visibility_status, :status, :loan_or_agreement_number, :stock_entry_date, :comments, :location, :vehicle_model_id, :selling_price_visibility_status, comments: [], :distributor_id).to_h.deep_symbolize_keys
+    params.require(:vehicle_details).permit(:id, :name, :registration_id, :chassis_id, :engine_id, :manufacturing_year, :cost_price, :cost_price_visibility_status, :status, :loan_or_agreement_number, :stock_entry_date, :comments, :location, :vehicle_model_id, :selling_price_visibility_status, :distributor_id, comments: []).to_h.deep_symbolize_keys
   end
 
 end
