@@ -2,7 +2,6 @@ class EmployerRecord < ApplicationRecord
   self.abstract_class = true
 
   def create_super_user
-    byebug
     User.create!({
       name: "Super Admin",
       email: ,

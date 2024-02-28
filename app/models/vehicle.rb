@@ -1,4 +1,7 @@
 class Vehicle < ApplicationRecord
-  belongs_to :vehicle_model, class_name: "vehicle_model", foreign_key: "vehicle_model_id"
+  belongs_to :vehicle_model, class_name: "VehicleModel", foreign_key: "vehicle_model_id"
   has_many :item_mappings, as: :item
+  validates :registration_id, presence: true, uniqueness: true
+  validates :chassis_id, presence: true, uniqueness: true
+  validates :engine_id, presence: true, uniqueness: true
 end
