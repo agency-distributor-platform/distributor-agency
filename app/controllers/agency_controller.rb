@@ -12,7 +12,6 @@ class AgencyController < AuthenticationController
   end
 
   def create_or_edit_vehicle_details
-    byebug
     agency.update_item_details({item_type: "vehicle", data: vehicle_params})
     render json: {}, status: 204
   end
