@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_25_203432) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_26_171741) do
   create_table "agencies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -82,7 +82,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_25_203432) do
     t.datetime "updated_at", null: false
     t.bigint "agency_id"
     t.float "cost_price"
-    t.string "cost_price_visibility_status"
+    t.boolean "cost_price_visibility_status"
     t.string "status"
     t.string "loan_or_agreement_number"
     t.string "stock_entry_date"

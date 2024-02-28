@@ -28,6 +28,7 @@ class AuthenticationController < ApplicationController
             email: user_type_details[:email],
             phone: user_type_details[:phone]
           })
+          user_type_record.update({uuid: user_type_model.generate_uuid}) rescue nil
           user_type_id = user_type_record.id
           user_type_record.create_super_user
         end
