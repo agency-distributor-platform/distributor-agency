@@ -16,10 +16,6 @@ class AgencyController < AuthenticationController
     render json: {}, status: 204
   end
 
-  def sell_vehicle
-    agency.sell_item({item_type: "vehicle", item_selling_details: item_selling_detail_params, buyer_id: params[:buyer_id]})
-  end
-
   def bulk_upload_vehicle_details
     #TO-DO: File handling
     agency.bulk_upload({item_type: "vehicle", data: upload_details})
@@ -27,7 +23,7 @@ class AgencyController < AuthenticationController
   end
 
   def get_sold_items
-    render json: agency.get_sold_items(params[:item_type], params[:limit], params[:offset])
+    render json: agency.get_sold_items(params[:item_type], params[:limit] || 10, params[:offset] || 1)
   end
 
   def get_distributors

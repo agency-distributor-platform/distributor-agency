@@ -38,10 +38,10 @@ module BusinessLogic
       }
     end
 
-    def get_sold_items(item_type, limit, offset)
-      offset = offset*limit #page number is received, we get db offset
-      obj_class = derive_obj_class(item_type)
-      obj_class.get_sold_items(ItemMapping.eager_load(:distributor).eager_load(:agency).where(agency_id: record_id).where(item_type: ), limit, offset)
+    def get_sold_items(item_type, limit, page_number)
+      offset = page_number*limit + 1 #page number is received, we get db offset
+      item_obj_class = derive_item_obj_class(item_type)
+      item_obj_class.get_sold_items(ItemMapping.eager_load(:distributor).eager_load(:agency).where(agency_id: record_id).where(item_type: ), limit, offset)
     end
 
     def get_distributors(limit, offset)
@@ -72,7 +72,7 @@ module BusinessLogic
 
     private
 
-    def derive_obj_class(item_type)
+    def derive_item_obj_class(item_type)
       "BusinessLogic::#{item_type.capitalize}Obj".constantize
     end
 

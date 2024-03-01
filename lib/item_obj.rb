@@ -1,3 +1,5 @@
+require_relative "./buyer_obj.rb"
+
 module BusinessLogic
   class ItemObj
     def initialize(record)
@@ -45,12 +47,11 @@ module BusinessLogic
       item_mappings.each { |item_mapping|
         distributor_details = item_mapping.distributor.as_json.deep_symbolize_keys rescue nil
         item_details = item_mapping.item.as_json.deep_symbolize_keys
-        next if item_details.selling_price.blank?
-        if distributor_details.blank?
-          distributor_id = distributor_details[:id]
-          distributor_details.delete(:id)
+        next if item_details[:selling_price].blank?
+        if distributor_details.present?
+          distributor_id = distributor_details.delete(:id)
           distributor_details_hash[distributor_id] = distributor_details.merge!({item_details: []}) if !distributor_details_hash.keys.include?(distributor_id)
-          distributor_details_hash[distributor_details[:id]][:item_details].push(item_details)
+          distributor_details_hash[distributor_id][:item_details].push(item_details)
         else
           item_distributor_details[:agency_sold_items].push(item_details)
         end

@@ -7,9 +7,10 @@ Rails.application.routes.draw do
   get "/login", to: "authentication#login" #done
   patch "/agency/:agency_id/edit", to: "agency#edit" #done
   put "/agency/:agency_id/vehicles", to: "agency#bulk_upload_vehicle_details" #TO-DO
-  put "/agency/:agency_id/vehicle", to: "agency#create_or_edit_vehicle_details" #testing
-  put "/sell_vehicle", to: "item#sell_vehicle" #testing
-  get "/agency/:agency_id/sold_items", to: "agency#get_sold_items" #Testing
+  put "/agency/:agency_id/vehicle", to: "agency#create_or_edit_vehicle_details" #done
+  patch "/sell_vehicle", to: "item#sell_vehicle" #done
+  get "/agency/:agency_id/sold_items", to: "agency#get_sold_items" #done
+  get "/distributor/:distributor_id/sold_items", to: "distributor#get_sold_items" #done
   get "/agency/:agency_id/distributors", to: "agency#get_distributors" #Testing
   get "/agency/:agency_id/distributors/:distributor_id", to: "agency#get_distributor" #Testing
   patch "/agency/:agency_id/distributors_linking", to: "agency#distributors_linking" #Testing
@@ -33,7 +34,7 @@ end
 
 # Get-All-Vehicles (default - all; possible values - sold , available , unavailable, deal-in-progress) (Selling-price is visible)
 
-# Sell-Vehicle-by-distributors
+
 
 # ———————
 
