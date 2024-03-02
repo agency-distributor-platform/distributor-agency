@@ -10,6 +10,7 @@ module BusinessLogic
       record.agency_id = agency_id
       model.transaction {
         distributor_id = data.delete(:distributor_id)
+        distributor_id = nil if distributor_id.present? && invalid_distributor?(agency_id, distributor_id)
         if record.persisted?
           record.update!(data)
         else
@@ -67,6 +68,10 @@ module BusinessLogic
     private
 
     def model
+    end
+
+    def invalid_distributor?(agency_id, distributor_id)
+      Distributor.find_by(id: distributor_id).agency_id != agency_id rescue true
     end
 
     def add_buyer_to_item_mapping(buyer_obj)

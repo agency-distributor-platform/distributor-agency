@@ -10,6 +10,22 @@ class DistributorController < ApplicationController
     render json: distributor.get_sold_items(params[:item_type], params[:limit] || 10, params[:offset] || 1)[:distributor_sold_items].first[:item_details]
   end
 
+  def get_buyers
+    render json: distributor.get_buyers, status: 200
+  end
+
+  def get_buyer
+    render json: distributor.get_buyer(params[:buyer_id].to_i), status: 200
+  end
+
+  def get_vehicles
+    render json: distributor.get_items("vehicle"), status: 200
+  end
+
+  def get_vehicle_details
+    render json: distributor.get_item({item_type: "vehicle", item_id: params[:vehicle_id]}), status: 200
+  end
+
   private
 
   def set_distributor_obj

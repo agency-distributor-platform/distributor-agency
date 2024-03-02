@@ -10,7 +10,7 @@ module BusinessLogic
     def link_to_agency(agency_obj)
       if record_present?
         return if agency_obj.distributors.pluck(:id).include?(record_id)
-        record.distributor = agency_obj.record
+        record.agency = agency_obj.record
         record.save!
       else
         raise "Wrong distributor record"
@@ -28,11 +28,55 @@ module BusinessLogic
     end
 
     def record_present?
-      record.id.present?
+      record.persisted?
     end
 
     def record_id
       record.id
+    end
+
+    def get_buyers
+      buyers = []
+      record.item_mappings.each { |item_mapping|
+        buyer_json = item_mapping.buyer.as_json rescue nil
+        buyers.push(buyer_json) if buyer_json.present?
+      }
+      buyers
+    end
+
+    def get_buyer(buyer_id)
+      Buyer.find_by(id: buyer_id).as_json if valid_buyer(buyer_id)
+    end
+
+    def get_items(item_type)
+      ItemMapping.where({distributor_id: record_id, item_type: }).as_json
+    end
+
+    def get_item(item_details)
+      item_type = item_details[:item_type]
+      item_id = item_details[:item_id]
+      ItemMapping.where({distributor_id: record_id, item_type: , item_id: }).first.as_json
+    end
+
+    def get_items(item_type)
+      item_ids = ItemMapping.where({distributor_id: record_id, item_type: }).pluck(:item_id)
+      derive_model(item_type).where(id: item_ids).as_json
+    end
+
+    def get_item(item_details)
+      item_type = item_details[:item_type]
+      item_id = item_details[:item_id]
+      derive_model(item_type).find_by(id: item_id).as_json if ItemMapping.where({distributor_id: record_id, item_type: , item_id: }).present?
+    end
+
+    private
+
+    def valid_buyer(buyer_id)
+      record.item_mappings.pluck(:buyer_id).include?(buyer_id)
+    end
+
+    def derive_model(item_type)
+      "#{item_type.capitalize}".constantize
     end
 
   end

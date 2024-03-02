@@ -30,7 +30,7 @@ module BusinessLogic
     end
 
     def bulk_upload(items)
-      obj_class = derive_obj_class(items[:item_type])
+      obj_class = derive_item_obj_class(items[:item_type])
       derive_model(items[:item_type]).transaction {
         items[:data].each { |record|
           obj_class.new(record).create_or_update(record, record_id)
@@ -50,7 +50,7 @@ module BusinessLogic
     end
 
     def get_distributor(distributor_id)
-      record.distributors.where(id: distributor_id).as_json rescue nil
+      record.distributors.find_by(id: distributor_id).as_json rescue nil
     end
 
     def get_buyers
@@ -64,6 +64,17 @@ module BusinessLogic
 
     def get_buyer(buyer_id)
       Buyer.find_by(id: buyer_id).as_json if valid_buyer(buyer_id)
+    end
+
+    def get_items(item_type)
+      item_ids = ItemMapping.where({agency_id: record_id, item_type: }).pluck(:item_id)
+      derive_model(item_type).where(id: item_ids).as_json
+    end
+
+    def get_item(item_details)
+      item_type = item_details[:item_type]
+      item_id = item_details[:item_id]
+      derive_model(item_type).find_by(id: item_id).as_json if ItemMapping.where({agency_id: record_id, item_type: , item_id: }).present?
     end
 
     def record_id

@@ -23,11 +23,11 @@ class AgencyController < AuthenticationController
   end
 
   def get_sold_items
-    render json: agency.get_sold_items(params[:item_type], params[:limit] || 10, params[:offset] || 1)
+    render json: agency.get_sold_items(params[:item_type], params[:limit] || 10, params[:offset] || 0)
   end
 
   def get_distributors
-    render json: agency.get_distributors(params[:limit], params[:offset])
+    render json: agency.get_distributors(params[:limit] || 10, params[:offset] || 0)
   end
 
   def get_distributor
@@ -42,20 +42,24 @@ class AgencyController < AuthenticationController
   end
 
   def distributors_linking
-    BusinessLogic::DistributorObj.new({id: params[:distributor_id]}).link_to_agency(agency_obj)
+    BusinessLogic::DistributorObj.new({id: params[:distributor_id]}).link_to_agency(agency)
     render json: {}, status: 204
   end
 
   def get_buyers
-    render json: agency_obj.get_buyers, status: 200
+    render json: agency.get_buyers, status: 200
   end
 
   def get_buyer
-    render json: agency_obj.get_buyer(params[:buyer_id]), status: 200
+    render json: agency.get_buyer(params[:buyer_id].to_i), status: 200
   end
 
   def get_vehicles
+    render json: agency.get_items("vehicle"), status: 200
+  end
 
+  def get_vehicle_details
+    render json: agency.get_item({item_type: "vehicle", item_id: params[:vehicle_id]}), status: 200
   end
 
   private
