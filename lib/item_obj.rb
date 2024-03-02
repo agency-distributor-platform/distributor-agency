@@ -17,10 +17,14 @@ module BusinessLogic
           record.save!
         end
         if record.item_mapping.blank?
-          ItemMapping.create!({item_type: model.to_s, agency_id: , distributor_id: , item_id: record.id})
+          write_hash = {item_type: model.to_s, agency_id: , item_id: record.id}
+          write_hash.merge!({distributor_id: }) if distributor_id.present?
+          ItemMapping.create!(write_hash)
         else
           item_mapping = record.item_mapping
-          item_mapping.update({item_type: model.to_s, agency_id: , distributor_id: , item_id: record.id})
+          write_hash = {item_type: model.to_s, agency_id: , item_id: record.id}
+          write_hash.merge!({distributor_id: }) if distributor_id.present?
+          item_mapping.update(write_hash)
         end
       }
     end

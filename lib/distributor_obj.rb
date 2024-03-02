@@ -7,6 +7,10 @@ module BusinessLogic
       @record = record[:id].present? ? Distributor.find_by(id: record[:id]) : Distributor.new(record)
     end
 
+    def update(params)
+      record.update(params)
+    end
+
     def link_to_agency(agency_obj)
       if record_present?
         return if agency_obj.distributors.pluck(:id).include?(record_id)
