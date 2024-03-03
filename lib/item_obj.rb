@@ -1,3 +1,5 @@
+require_relative "./buyer_obj.rb"
+
 module BusinessLogic
   class ItemObj
     def initialize(record)
@@ -8,16 +10,21 @@ module BusinessLogic
       record.agency_id = agency_id
       model.transaction {
         distributor_id = data.delete(:distributor_id)
+        distributor_id = nil if distributor_id.present? && invalid_distributor?(agency_id, distributor_id)
         if record.persisted?
           record.update!(data)
         else
           record.save!
         end
         if record.item_mapping.blank?
-          ItemMapping.create!({item_type: model.to_s, agency_id: , distributor_id: , item_id: record.id})
+          write_hash = {item_type: model.to_s, agency_id: , item_id: record.id}
+          write_hash.merge!({distributor_id: }) if distributor_id.present?
+          ItemMapping.create!(write_hash)
         else
           item_mapping = record.item_mapping
-          item_mapping.update({item_type: model.to_s, agency_id: , distributor_id: , item_id: record.id})
+          write_hash = {item_type: model.to_s, agency_id: , item_id: record.id}
+          write_hash.merge!({distributor_id: }) if distributor_id.present?
+          item_mapping.update(write_hash)
         end
       }
     end
@@ -45,12 +52,11 @@ module BusinessLogic
       item_mappings.each { |item_mapping|
         distributor_details = item_mapping.distributor.as_json.deep_symbolize_keys rescue nil
         item_details = item_mapping.item.as_json.deep_symbolize_keys
-        next if item_details.selling_price.blank?
-        if distributor_details.blank?
-          distributor_id = distributor_details[:id]
-          distributor_details.delete(:id)
+        next if item_details[:selling_price].blank?
+        if distributor_details.present?
+          distributor_id = distributor_details.delete(:id)
           distributor_details_hash[distributor_id] = distributor_details.merge!({item_details: []}) if !distributor_details_hash.keys.include?(distributor_id)
-          distributor_details_hash[distributor_details[:id]][:item_details].push(item_details)
+          distributor_details_hash[distributor_id][:item_details].push(item_details)
         else
           item_distributor_details[:agency_sold_items].push(item_details)
         end
@@ -66,6 +72,10 @@ module BusinessLogic
     private
 
     def model
+    end
+
+    def invalid_distributor?(agency_id, distributor_id)
+      Distributor.find_by(id: distributor_id).agency_id != agency_id rescue true
     end
 
     def add_buyer_to_item_mapping(buyer_obj)

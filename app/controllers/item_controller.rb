@@ -21,6 +21,6 @@ class ItemController < ApplicationController
   end
 
   def buyer_detail_params
-    params.require(:buyer_details).permit(:id, user_metadata: {}, :name).to_h.deep_symbolize_keys
+    params.require(:buyer_details).permit(:id, :name, user_metadata: {}).to_h.deep_symbolize_keys
   end
 end

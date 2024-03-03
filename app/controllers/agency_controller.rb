@@ -16,10 +16,6 @@ class AgencyController < AuthenticationController
     render json: {}, status: 204
   end
 
-  def sell_vehicle
-    agency.sell_item({item_type: "vehicle", item_selling_details: item_selling_detail_params, buyer_id: params[:buyer_id]})
-  end
-
   def bulk_upload_vehicle_details
     #TO-DO: File handling
     agency.bulk_upload({item_type: "vehicle", data: upload_details})
@@ -27,11 +23,11 @@ class AgencyController < AuthenticationController
   end
 
   def get_sold_items
-    render json: agency.get_sold_items(params[:item_type], params[:limit], params[:offset])
+    render json: agency.get_sold_items(params[:item_type], params[:limit] || 10, params[:offset] || 0)
   end
 
   def get_distributors
-    render json: agency.get_distributors(params[:limit], params[:offset])
+    render json: agency.get_distributors(params[:limit] || 10, params[:offset] || 0)
   end
 
   def get_distributor
@@ -46,20 +42,24 @@ class AgencyController < AuthenticationController
   end
 
   def distributors_linking
-    BusinessLogic::DistributorObj.new({id: params[:distributor_id]}).link_to_agency(agency_obj)
+    BusinessLogic::DistributorObj.new({id: params[:distributor_id]}).link_to_agency(agency)
     render json: {}, status: 204
   end
 
   def get_buyers
-    render json: agency_obj.get_buyers, status: 200
+    render json: agency.get_buyers, status: 200
   end
 
   def get_buyer
-    render json: agency_obj.get_buyer(params[:buyer_id]), status: 200
+    render json: agency.get_buyer(params[:buyer_id].to_i), status: 200
   end
 
   def get_vehicles
+    render json: agency.get_items("vehicle"), status: 200
+  end
 
+  def get_vehicle_details
+    render json: agency.get_item({item_type: "vehicle", item_id: params[:vehicle_id]}), status: 200
   end
 
   private
@@ -75,7 +75,7 @@ class AgencyController < AuthenticationController
   end
 
   def vehicle_params
-    params.require(:vehicle_details).permit(:id, :name, :registration_id, :chassis_id, :engine_id, :manufacturing_year, :cost_price, :cost_price_visibility_status, :status, :loan_or_agreement_number, :stock_entry_date, :comments, :location, :vehicle_model_id, :selling_price_visibility_status, comments: [], :distributor_id).to_h.deep_symbolize_keys
+    params.require(:vehicle_details).permit(:id, :name, :registration_id, :chassis_id, :engine_id, :manufacturing_year, :cost_price, :cost_price_visibility_status, :status, :loan_or_agreement_number, :stock_entry_date, :comments, :location, :vehicle_model_id, :selling_price_visibility_status, :distributor_id, comments: []).to_h.deep_symbolize_keys
   end
 
 end

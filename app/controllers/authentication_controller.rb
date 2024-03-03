@@ -4,7 +4,7 @@ class AuthenticationController < ApplicationController
   #TO-DO: Catch all errors and send error api response
   def login
     email = params[:email]
-    password = params[:email]
+    password = params[:password]
     if User.where(email: , password: ).present?
       render json: {
         token: hard_coded_token

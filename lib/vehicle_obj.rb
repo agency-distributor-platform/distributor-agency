@@ -7,7 +7,7 @@ module BusinessLogic
 
     def create_or_update(data, agency_id)
       record.cost_price_visibility_status = false if data[:cost_price_visibility_status].blank?
-      record.selling_price_visibility_status = false if data[:selling_price_visibility_status].blank?
+      record.selling_price_visibility_status = true if data[:selling_price_visibility_status].blank?
       super(data, agency_id)
     end
 
