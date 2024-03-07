@@ -5,6 +5,10 @@ Rails.application.routes.draw do
   # root "articles#index"
   post "/register", to: "authentication#register" #done
   post "/login", to: "authentication#login" #done
+  get "/agencies", to: "pre_login#list_agencies" #done
+  get "/distributors", to: "pre_login#list_distributors" #done
+  get "/search_agencies", to: "pre_login#search_agencies"
+  get "/search_distributors", to: "pre_login#search_distributors"
   patch "/agency/:agency_id/edit", to: "agency#edit" #done
   put "/agency/:agency_id/vehicles", to: "agency#bulk_upload_vehicle_details" #TO-DO
   put "/agency/:agency_id/vehicle", to: "agency#create_or_edit_vehicle_details" #done
