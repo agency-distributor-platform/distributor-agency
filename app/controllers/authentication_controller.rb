@@ -6,9 +6,15 @@ class AuthenticationController < ApplicationController
     email = params[:email]
     password = params[:password]
     if User.where(email: , password: ).present?
-      render json: {
-        token: hard_coded_token
-      }, status: 200
+      if password.blank?
+        render json: {
+          error: "Not Authenticated"
+        }, status: 401
+      else
+        render json: {
+          token: hard_coded_token
+        }, status: 200
+      end
     else
       render json: {
         error: "Not Authenticated"
@@ -30,7 +36,7 @@ class AuthenticationController < ApplicationController
           })
           user_type_record.update({uuid: user_type_model.generate_uuid}) rescue nil
           user_type_id = user_type_record.id
-          user_type_record.create_super_user
+          user_type_record.create_super_user if user_type_details[:email] != user_params[:email]
         end
         user = User.create!(user_params.merge!({employer_type: user_type_details[:type], employer_id: user_type_id}))
       end
