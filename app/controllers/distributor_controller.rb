@@ -31,6 +31,11 @@ class DistributorController < ApplicationController
     render json: distributor.get_item({item_type: "vehicle", item_id: params[:vehicle_id]}), status: 200
   end
 
+  def agency_linking
+    distributor.link_to_agency(BusinessLogic::AgencyObj.new({id: params[:agency_id]}))
+    render json: {}, status: 204
+  end
+
   private
 
   def edit_params

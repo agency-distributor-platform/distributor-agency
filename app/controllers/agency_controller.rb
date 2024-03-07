@@ -41,11 +41,6 @@ class AgencyController < AuthenticationController
     end
   end
 
-  def distributors_linking
-    BusinessLogic::DistributorObj.new({id: params[:distributor_id]}).link_to_agency(agency)
-    render json: {}, status: 204
-  end
-
   def get_buyers
     render json: agency.get_buyers, status: 200
   end
