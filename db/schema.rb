@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_26_171741) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_12_103612) do
   create_table "agencies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -18,6 +18,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_26_171741) do
     t.string "uuid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "address"
     t.index ["email"], name: "agencies_unique_email", unique: true
   end
 
@@ -48,9 +49,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_26_171741) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "distributor_id"
+    t.bigint "seller_persona_id"
     t.index ["agency_id"], name: "fk_rails_1d6f92d5e5"
     t.index ["buyer_id"], name: "fk_rails_65de868c7a"
     t.index ["distributor_id"], name: "fk_rails_7381df7ff8"
+    t.index ["seller_persona_id"], name: "fk_rails_4e70aa6ae1"
+  end
+
+  create_table "personas", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "persona_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -101,6 +110,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_26_171741) do
   add_foreign_key "item_selling_records", "agencies"
   add_foreign_key "item_selling_records", "buyers"
   add_foreign_key "item_selling_records", "distributors"
+  add_foreign_key "item_selling_records", "personas", column: "seller_persona_id"
   add_foreign_key "vehicles", "agencies"
   add_foreign_key "vehicles", "vehicle_models"
 end

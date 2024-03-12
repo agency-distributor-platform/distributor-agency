@@ -66,7 +66,7 @@ class AgencyController < AuthenticationController
   end
 
   def edit_params
-    params.require(:agency_details).permit(:name, :email, :phone)
+    params.require(:agency_details).permit(:name, :email, :phone, :address)
   end
 
   def vehicle_params
