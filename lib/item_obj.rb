@@ -31,8 +31,11 @@ module BusinessLogic
 
     def sell(selling_transaction_details)
       if record.persisted?
+        persona_id = selling_transaction_details[:persona_id]
+        persona_id = record.distributor_id.present? ? Persona.distributor_id : Persona.agency_id if persona_id.blank?
         model.transaction {
           record.selling_price = selling_transaction_details[:item_selling_price]
+          record.seller_persona_id = persona_id
           record.save!
           buyer_obj = BusinessLogic::BuyerObj.new(selling_transaction_details[:buyer_details])
           buyer_obj.create_or_update(selling_transaction_details[:buyer_details])

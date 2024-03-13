@@ -26,6 +26,11 @@ class AuthenticationController < ApplicationController
           user_type_record = user_type_model.create!({
             name: user_type_details[:name],
             email: user_type_details[:email],
+            phone: user_type_details[:phone],
+            address: user_type_details[:address]
+          }) rescue user_type_model.create!({
+            name: user_type_details[:name],
+            email: user_type_details[:email],
             phone: user_type_details[:phone]
           })
           user_type_record.update({uuid: user_type_model.generate_uuid}) rescue nil
