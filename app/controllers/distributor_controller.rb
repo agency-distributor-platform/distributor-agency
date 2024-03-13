@@ -12,7 +12,8 @@ class DistributorController < ApplicationController
   end
 
   def get_sold_items
-    render json: distributor.get_sold_items(params[:item_type], params[:limit] || 10, params[:offset] || 1)[:distributor_sold_items].first[:item_details]
+    sold_items = distributor.get_sold_items(params[:item_type], params[:limit] || 10, params[:offset] || 1)[:distributor_sold_items].first[:item_details] rescue []
+    render json: sold_items
   end
 
   def get_buyers
@@ -32,7 +33,7 @@ class DistributorController < ApplicationController
   end
 
   def agency_linking
-    distributor.link_to_agency(BusinessLogic::AgencyObj.new({id: params[:agency_id]}))
+    distributor.link_to_agency(BusinessLogic::AgencyObj.new({id: Agency.find_by(uuid: params[:agency_uuid]).id }))
     render json: {}, status: 204
   end
 

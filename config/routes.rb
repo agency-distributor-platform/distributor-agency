@@ -10,6 +10,11 @@ Rails.application.routes.draw do
   get "/search_agencies", to: "pre_login#search_agencies"
   get "/search_distributors", to: "pre_login#search_distributors"
   patch "/agency/:agency_id/edit", to: "agency#edit" #done
+  post "/vehicle_model/create", to: "vehicle_model#create" #TO-DO
+  patch "/vehicle_model/:id", to: "vehicle_model#edit" #TO-DO
+  get "/vehicle_model/:id", to: "vehicle_model#show" #TO-DO
+  get "/vehicle_models", to: "vehicle_model#list" #TO-DO
+  delete "/vehicle_model/:id", to: "vehicle_model#delete" #TO-DO
   put "/agency/:agency_id/vehicles", to: "agency#bulk_upload_vehicle_details" #TO-DO
   put "/agency/:agency_id/vehicle", to: "agency#create_or_edit_vehicle_details" #done
   patch "/sell_vehicle", to: "item#sell_vehicle" #done

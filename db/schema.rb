@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_12_103612) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_13_103631) do
   create_table "agencies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -79,6 +79,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_12_103612) do
     t.string "model"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["company_name", "model"], name: "vehicle_models_unique_company_name_model", unique: true
   end
 
   create_table "vehicles", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

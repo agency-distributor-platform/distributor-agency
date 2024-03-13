@@ -5,10 +5,11 @@ class ItemController < ApplicationController
   attr_accessor :obj_class
 
   def sell_vehicle
-    persona_id = Persona.find_by(item_selling_detail_params[:persona]).id
+    persona_id = Persona.find_by(persona_name: item_selling_detail_params[:persona]).id rescue nil
     derive_obj_class(params[:item_type])
-    obj_class.new({id: item_selling_detail_params[:id]}).sell({item_selling_price: item_selling_detail_params[:selling_price], persona_id: , buyer_details: buyer_detail_params})
-    render json: {}, status: 204
+    obj_record = obj_class.new({id: item_selling_detail_params[:id]})
+    obj_record.sell({item_selling_price: item_selling_detail_params[:selling_price], persona_id: , buyer_details: buyer_detail_params})
+    render json: obj_record.json_obj, status: 201
   end
 
   private

@@ -12,8 +12,7 @@ class AgencyController < AuthenticationController
   end
 
   def create_or_edit_vehicle_details
-    agency.update_item_details({item_type: "vehicle", data: vehicle_params})
-    render json: {}, status: 204
+    render json: agency.update_item_details({item_type: "vehicle", data: vehicle_params}), status: 201
   end
 
   def bulk_upload_vehicle_details

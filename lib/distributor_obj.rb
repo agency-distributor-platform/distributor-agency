@@ -24,7 +24,7 @@ module BusinessLogic
     def get_sold_items(item_type, limit, page_number)
       offset = page_number*limit + 1 #page number is received, we get db offset
       item_obj_class = derive_item_obj_class(item_type)
-      item_obj_class.get_sold_items(ItemMapping.eager_load(:distributor).eager_load(:agency).where(distributor_id: record_id).where(item_type: ), limit, offset)
+      item_obj_class.get_sold_items(ItemMapping.eager_load(:distributor).eager_load(:agency).where(distributor_id: record_id).where(item_type: ).where(seller_persona_id: Persona.distributor_id), limit, offset)
     end
 
     def derive_item_obj_class(item_type)
