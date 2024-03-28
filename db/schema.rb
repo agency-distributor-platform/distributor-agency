@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_28_191728) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_28_192659) do
   create_table "agencies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -64,6 +64,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_28_191728) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "distributor_id"
+    t.bigint "salesperson_id"
+    t.integer "salesperson_share"
+    t.integer "distributor_share"
     t.index ["agency_id"], name: "fk_rails_1d6f92d5e5"
     t.index ["buyer_id"], name: "fk_rails_65de868c7a"
     t.index ["distributor_id"], name: "fk_rails_7381df7ff8"

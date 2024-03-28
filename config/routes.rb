@@ -23,6 +23,8 @@ Rails.application.routes.draw do
 
   patch "/sell_vehicle", to: "item#sell_vehicle" #TO-DO #downpayment/partial sales also handled in this api #buyer information maybe created here
   patch "/book_vehicle", to: "item#book_vehicle" #TO-DO #buyer info to be inputted, create buyer maybe possible
+  put "/distributor_share", to: "item#add_or_edit_distributor_share"
+  put "/salesperson_share", to: "item#add_or_edit_salesperson_share"
 
   get "/agency/sold_items", to: "agency#get_sold_items" #TO-DO
   get "/distributor/sold_items", to: "distributor#get_sold_items" #TO-DO
