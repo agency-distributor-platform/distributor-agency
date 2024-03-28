@@ -7,8 +7,12 @@ class AgencyController < AuthenticationController
   before_action :set_agency_obj
 
   def edit
+    raise "False Pincode Format" if edit_params[:pincode].present? && is_false_pincode?(edit_params[:pincode])
+    raise "False state value" if edit_params[:state].present? && is_false_state_or_ut?(edit_params[:state])
     agency.update(edit_params)
-    render json: agency.as_json, status: 201
+    agency_details = agency.as_json
+    agency_details["id"] = convert_id_to_uuid(agency_details["id"])
+    render json: agency_details, status: 201
   end
 
   def create_or_edit_vehicle_details
@@ -59,13 +63,13 @@ class AgencyController < AuthenticationController
   private
 
   def set_agency_obj
-    record = Agency.find_by(id: params[:agency_id])
-    raise "Check agency id" if record.blank?
+    record = $user.employer
+    raise "Check user session" if record.blank? || $user.employer_type != "Agency"
     @agency = BusinessLogic::AgencyObj.new(record.as_json.deep_symbolize_keys)
   end
 
   def edit_params
-    params.require(:agency_details).permit(:name, :email, :phone, :address)
+    params.require(:agency_details).permit(:name, :email, :phone, :address, :city, :state, :pincode)
   end
 
   def vehicle_params
