@@ -13,10 +13,14 @@ class AuthenticationController < ApplicationController
     password = params[:password]
     user = User.find_by(email: , password: )
     if user.present?
+      token = JwtTokenUtils.encode({
+        timestamp: DateTime.now.to_s,
+        email: user.email,
+        user_type: user.employer_type
+      })
+      Session.create!(session_id: token)#, user_id: user.id)
       render json: {
-        token: JwtTokenUtils.encode({
-          email: user.email
-        })
+        token:
       }, status: 200
     else
       render json: {
@@ -72,13 +76,22 @@ class AuthenticationController < ApplicationController
   def check_token_access
     token = request.headers["Authorization"].split("Bearer ")[1] rescue nil
     raise "User not authenticated" if token.blank?
+    byebug
     begin
       $user = User.find_by(email: JwtTokenUtils.decode(token).first["email"])
+      $session = Session.find_by(session_id: token)
+      if DateTime.now.to_i - session.updated_at > 1800
+        $session.delete
+        $session = nil
+      else
+        $session.update!(updated_at: DateTime.now)
+      end
     rescue
       raise "User not authenticated"
     end
 
     raise "User not found" if $user.blank?
+    raise "Session expired" if $session.blank?
   end
 
   def user_params

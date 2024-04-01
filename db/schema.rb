@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_28_192659) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_01_034216) do
   create_table "agencies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -23,6 +23,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_28_192659) do
     t.string "state"
     t.integer "pincode"
     t.index ["email"], name: "agencies_unique_email", unique: true
+  end
+
+  create_table "booking_transactions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.float "booking_price"
+    t.string "booking_persona_type"
   end
 
   create_table "buyers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -67,9 +72,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_28_192659) do
     t.bigint "salesperson_id"
     t.integer "salesperson_share"
     t.integer "distributor_share"
+    t.bigint "status_id"
     t.index ["agency_id"], name: "fk_rails_1d6f92d5e5"
     t.index ["buyer_id"], name: "fk_rails_65de868c7a"
     t.index ["distributor_id"], name: "fk_rails_7381df7ff8"
+    t.index ["status_id"], name: "fk_rails_5a66de9fe6"
   end
 
   create_table "prospect_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -99,22 +106,28 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_28_192659) do
     t.integer "pincode"
   end
 
+  create_table "selling_transactions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.float "selling_price"
+    t.float "due_price"
+    t.string "selling_persona_type"
+  end
+
+  create_table "sessions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "session_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
+  end
+
   create_table "statuses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
   end
 
   create_table "transactions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "item_mapping_record_id"
-    t.datetime "selling_date"
-    t.datetime "booking_date"
-    t.datetime "downpayment_date"
-    t.string "seller_persona_type"
-    t.string "booking_persona_type"
-    t.string "partial_seller_persona_type"
-    t.float "selling_price"
-    t.float "booking_price"
-    t.float "due_price"
     t.datetime "transaction_date"
+    t.string "transaction_type"
+    t.bigint "transaction_id"
     t.index ["item_mapping_record_id"], name: "fk_rails_bd2cf037af"
   end
 
@@ -164,6 +177,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_28_192659) do
   add_foreign_key "item_mapping_records", "agencies"
   add_foreign_key "item_mapping_records", "buyers"
   add_foreign_key "item_mapping_records", "distributors"
+  add_foreign_key "item_mapping_records", "statuses"
   add_foreign_key "prospect_users", "vehicle_models"
   add_foreign_key "transactions", "item_mapping_records"
   add_foreign_key "vehicles", "agencies"
