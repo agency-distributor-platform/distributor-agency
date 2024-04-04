@@ -1,0 +1,30 @@
+require "#{Rails.root}/lib/all_business_logic"
+
+class SalespersonController < AuthenticationController
+  include BusinessLogic
+  attr_accessor :salesperson
+  before_action :set_salesperson_obj
+
+  def edit
+    raise "False Pincode Format" if edit_params[:pincode].present? && is_false_pincode?(edit_params[:pincode])
+    raise "False state value" if edit_params[:state].present? && is_false_state_or_ut?(edit_params[:state])
+    salesperson.update(edit_params)
+    render json: salesperson.as_json, status: 200
+  end
+
+
+  private
+
+  def edit_params
+    params.require(:salesperson_details).permit(:name, :email, :phone, :address, :city, :state, :pincode)
+  end
+
+  def set_salesperson_obj
+    byebug
+    record = Salesperson.find_by(id: user.employer_id)
+    record = nil if !(user.employer_type == "Salesperson")
+    raise "Check salesperson id" if record.blank?
+    @salesperson = BusinessLogic::SalespersonObj.new(record.as_json.deep_symbolize_keys)
+  end
+
+end

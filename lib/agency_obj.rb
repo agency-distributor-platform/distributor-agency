@@ -25,23 +25,6 @@ module BusinessLogic
       record.as_json
     end
 
-    def update_item_details(item_params)
-      bulk_upload({item_type: item_params[:item_type], data: [item_params[:data]]}).first
-    end
-
-    def bulk_upload(items)
-      return_items = []
-      obj_class = derive_item_obj_class(items[:item_type])
-      derive_model(items[:item_type]).transaction {
-        items[:data].each { |record|
-          obj_record = obj_class.new(record)
-          obj_record.create_or_update(record, record_id)
-          return_items.push(obj_record.json_obj)
-        }
-      }
-      return_items
-    end
-
     def get_sold_items(item_type, limit, page_number)
       offset = page_number*limit + 1 #page number is received, we get db offset
       item_obj_class = derive_item_obj_class(item_type)

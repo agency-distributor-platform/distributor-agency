@@ -31,7 +31,8 @@ class VehicleModelController < AuthenticationController
   def vehicle_model_params
     params.require(:vehicle_model_details).permit(
       :company_name,
-      :model
+      :model,
+      :manufactoring_year
     )
   end
 

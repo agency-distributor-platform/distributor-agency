@@ -15,10 +15,6 @@ class AgencyController < AuthenticationController
     render json: agency_details, status: 201
   end
 
-  def create_or_edit_vehicle_details
-    render json: agency.update_item_details({item_type: "vehicle", data: vehicle_params}), status: 201
-  end
-
   def bulk_upload_vehicle_details
     #TO-DO: File handling
     agency.bulk_upload({item_type: "vehicle", data: upload_details})
@@ -70,10 +66,6 @@ class AgencyController < AuthenticationController
 
   def edit_params
     params.require(:agency_details).permit(:name, :email, :phone, :address, :city, :state, :pincode)
-  end
-
-  def vehicle_params
-    params.require(:vehicle_details).permit(:id, :name, :registration_id, :chassis_id, :engine_id, :manufacturing_year, :cost_price, :cost_price_visibility_status, :status, :loan_or_agreement_number, :stock_entry_date, :comments, :location, :vehicle_model_id, :selling_price_visibility_status, :distributor_id, comments: []).to_h.deep_symbolize_keys
   end
 
 end

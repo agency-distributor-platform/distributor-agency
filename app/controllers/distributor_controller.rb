@@ -1,12 +1,14 @@
 require "#{Rails.root}/lib/all_business_logic"
 
-class DistributorController < ApplicationController
+class DistributorController < AuthenticationController
 
   include BusinessLogic
   attr_accessor :distributor
   before_action :set_distributor_obj
 
   def edit
+    raise "False Pincode Format" if edit_params[:pincode].present? && is_false_pincode?(edit_params[:pincode])
+    raise "False state value" if edit_params[:state].present? && is_false_state_or_ut?(edit_params[:state])
     distributor.update(edit_params)
     render json: distributor.as_json, status: 201
   end
@@ -33,18 +35,19 @@ class DistributorController < ApplicationController
   end
 
   def agency_linking
-    distributor.link_to_agency(BusinessLogic::AgencyObj.new({id: Agency.find_by(uuid: params[:agency_uuid]).id }))
+    distributor.link_to_agency(BusinessLogic::AgencyObj.new({id: Agency.find_by(id: convert_uuid_to_id(params[:agency_uuid])).id }))
     render json: {}, status: 204
   end
 
   private
 
   def edit_params
-    params.require(:distributor_details).permit(:name, :email, :phone, :metadata)
+    params.require(:distributor_details).permit(:name, :email, :phone, :address, :city, :state, :pincode)
   end
 
   def set_distributor_obj
-    record = Distributor.find_by(id: params[:distributor_id])
+    record = Distributor.find_by(id: user.employer_id)
+    record = nil if !(user.employer_type == "Distributor")
     raise "Check distributor id" if record.blank?
     @distributor = BusinessLogic::DistributorObj.new(record.as_json.deep_symbolize_keys)
   end

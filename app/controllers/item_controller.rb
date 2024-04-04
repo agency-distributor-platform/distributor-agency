@@ -1,6 +1,6 @@
 require "#{Rails.root}/lib/all_business_logic"
 
-class ItemController < ApplicationController
+class ItemController < AuthenticationController
 
   attr_accessor :obj_class
 

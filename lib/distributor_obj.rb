@@ -1,7 +1,9 @@
+require_relative "./agency_obj.rb"
+
 module BusinessLogic
   class DistributorObj
 
-    attr_accessor :record
+    attr_accessor :record, :agency
 
     def initialize(record)
       @record = record[:id].present? ? Distributor.find_by(id: record[:id]) : Distributor.new(record)
@@ -19,6 +21,11 @@ module BusinessLogic
       else
         raise "Wrong distributor record"
       end
+    end
+
+    def agency
+      @agency = @agency || derive_agency_obj
+      @agency
     end
 
     def get_sold_items(item_type, limit, page_number)
@@ -81,6 +88,11 @@ module BusinessLogic
 
     def derive_model(item_type)
       "#{item_type.capitalize}".constantize
+    end
+
+    def derive_agency_obj
+      agency_record = record.agency
+      BusinessLogic::AgencyObj.new(agency_record) if agency_record.present?
     end
 
   end
