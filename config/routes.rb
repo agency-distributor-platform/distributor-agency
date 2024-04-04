@@ -7,46 +7,40 @@ Rails.application.routes.draw do
   post "/login", to: "authentication#login" #done
   get "/agencies", to: "pre_login#list_agencies" #done
   get "/distributors", to: "pre_login#list_distributors" #done
-  get "/search_agencies", to: "pre_login#search_agencies"
-  get "/search_distributors", to: "pre_login#search_distributors"
-  patch "/agency/:agency_id/edit", to: "agency#edit" #done
-  put "/agency/:agency_id/vehicles", to: "agency#bulk_upload_vehicle_details" #TO-DO
-  put "/agency/:agency_id/vehicle", to: "agency#create_or_edit_vehicle_details" #done
-  patch "/sell_vehicle", to: "item#sell_vehicle" #done
-  get "/agency/:agency_id/sold_items", to: "agency#get_sold_items" #done
-  get "/distributor/:distributor_id/sold_items", to: "distributor#get_sold_items" #done
-  get "/agency/:agency_id/distributors", to: "agency#get_distributors" #done
-  get "/agency/:agency_id/distributors/:distributor_id", to: "agency#get_distributor" #done
-  patch "/distributor/:distributor_id/agency_linking", to: "distributor#agency_linking" #done -> Edit other way round
-  get "/agency/:agency_id/buyers", to: "agency#get_buyers" #done
-  get "/agency/:agency_id/buyers/:buyer_id", to: "agency#get_buyer" #done
-  get "/agency/:agency_id/vehicles", to: "agency#get_vehicles" #done
-  get "/agency/:agency_id/vehicles/:vehicle_id", to: "agency#get_vehicle_details" #done
-  patch "/distributor/:distributor_id/edit", to: "distributor#edit" #done
-  get "/distributor/:distributor_id/buyers", to: "distributor#get_buyers" #done
-  get "/distributor/:distributor_id/buyers/:buyer_id", to: "distributor#get_buyer" #done
-  get "/distributor/:distributor_id/vehicles", to: "distributor#get_vehicles" #done
-  get "/distributor/:distributor_id/vehicles/:vehicle_id", to: "distributor#get_vehicle_details" #done
-  patch "/buyer/:buyer_id/edit", to: "buyer#edit" #done
+  get "/search_agencies", to: "pre_login#search_agencies" #done
+  get "/search_distributors", to: "pre_login#search_distributors" #done
+  get "/search_salespersons", to: "pre_login#search_salespersons" #TO-DO
+  patch "/agency/edit", to: "agency#edit" #done #user can only edit it's own agency
 
-  #get agency own details ->
-  #get all distributors ->
+  post "/vehicle_model/create", to: "vehicle_model#create" #done
+  patch "/vehicle_model/:id", to: "vehicle_model#edit" #done
+  get "/vehicle_model/:id", to: "vehicle_model#show" #done
+  get "/vehicle_models", to: "vehicle_model#list" #done
+  delete "/vehicle_model/:id", to: "vehicle_model#delete" #done
+
+  get "/agency/distributors", to: "agency#get_distributors" #done
+  patch "/distributor/agency_linking", to: "distributor#agency_linking" #done
+
+  patch "/distributor/edit", to: "distributor#edit" #done
+  patch "/salesperson/edit", to: "salesperson#edit" #done
+
+  put "/vehicle", to: "vehicles#create_or_edit_vehicle_details" #TO-DO
+  get "/vehicles", to: "vehicles#get_vehicles" #TO-DO
+  get "/vehicles/:vehicle_id", to: "vehicles#get_vehicle_details" #TO-DO
+
+  patch "/sell_vehicle", to: "item#sell_vehicle" #TO-DO #downpayment/partial sales also handled in this api #buyer information maybe created here
+  patch "/book_vehicle", to: "item#book_vehicle" #TO-DO #buyer info to be inputted, create buyer maybe possible
+  put "/distributor_share", to: "item#add_or_edit_distributor_share" #TO-DO
+  put "/salesperson_share", to: "item#add_or_edit_salesperson_share" #TO-DO
+
+  get "/agency/sold_items", to: "agency#get_sold_items" #TO-DO
+  get "/distributor/sold_items", to: "distributor#get_sold_items" #TO-DO
+  get "/agency/booked_items", to: "agency#get_booked_items" #TO-DO
+  get "/distributor/booked_items", to: "distributor#get_booked_items" #TO-DO
+
+  get "/buyers", to: "buyer#get_buyers" #TO-DO
+  get "/buyers/:buyer_id", to: "buyer#get_buyer" #TO-DO
+  patch "/buyer/:buyer_id/edit", to: "buyer#edit" #TO-DO
 end
 
-# Token based authentication of requests
-# Set sessions on login, cleanup of session ids -> use cache
-# Logout routes
-
-# ————————————————————————————————————————————————————————
-
-# USER
-
-# Login
-
-# Logout
-
-# Registration
-
-# GetAllVehicles (selling-price is visible)
-
-# ————————————————————————————————————————————————————————
+#TO-DO Logout routes

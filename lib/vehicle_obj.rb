@@ -13,6 +13,10 @@ module BusinessLogic
 
     private
 
+    def extra_columns
+      [:distributor_id]
+    end
+
     def model
       Vehicle
     end

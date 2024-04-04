@@ -1,20 +1,29 @@
+require "#{Rails.root}/lib/authentication/jwt_token.rb"
+require "#{Rails.root}/lib/utils/address_utils.rb"
+
 class AuthenticationController < ApplicationController
-  before_action :check_token_access, except: [:login]
+  before_action :check_token_access, except: [:login, :register]
+
+  include Authentication
+  include Utils
 
   #TO-DO: Catch all errors and send error api response
   def login
     email = params[:email]
     password = params[:password]
-    if User.where(email: , password: ).present?
-      if password.blank?
-        render json: {
-          error: "Not Authenticated"
-        }, status: 401
-      else
-        render json: {
-          token: hard_coded_token
-        }, status: 200
-      end
+    employer_type = params[:login_type]
+    user = User.find_by(email: , password: , employer_type: )
+    if user.present?
+      token = JwtTokenUtils.encode({
+        timestamp: DateTime.now.to_s,
+        email: user.email,
+        # user_type: user.employer_type,
+        user_id: user.id
+      })
+      Session.create!(session_id: token)#, user_id: user.id)
+      render json: {
+        token:
+      }, status: 200
     else
       render json: {
         error: "Not Authenticated"
@@ -29,22 +38,31 @@ class AuthenticationController < ApplicationController
       user = nil
       ApplicationRecord.transaction do
         if user_type_id.blank?
+          raise "False Pincode Format" if user_type_details[:pincode].present? && is_false_pincode?(user_type_details[:pincode])
+          raise "False state value" if user_type_details[:state].present? && is_false_state_or_ut?(user_type_details[:state])
           user_type_record = user_type_model.create!({
             name: user_type_details[:name],
             email: user_type_details[:email],
-            phone: user_type_details[:phone]
+            phone: user_type_details[:phone],
+            address: user_type_details[:address],
+            city: user_type_details[:city],
+            state: user_type_details[:state],
+            pincode: user_type_details[:pincode]
           })
-          user_type_record.update({uuid: user_type_model.generate_uuid}) rescue nil
           user_type_id = user_type_record.id
           user_type_record.create_super_user if user_type_details[:email] != user_params[:email]
         end
         user = User.create!(user_params.merge!({employer_type: user_type_details[:type], employer_id: user_type_id}))
       end
+      user_details = user.as_json
+      user_details[:id] = convert_id_to_uuid(user.id)
+      user_type_id = convert_id_to_uuid(user_type_id)
+      user_details[:employer_id] = user_type_id
       render json: {
         user_type_details: {
           id: user_type_id,
           user_type: user_type_details[:type]
-        }, user_details: user.as_json
+        }, user_details:
       }, status: 200
     rescue => e
       render json: {
@@ -59,11 +77,27 @@ class AuthenticationController < ApplicationController
 
   def check_token_access
     token = request.headers["Authorization"].split("Bearer ")[1] rescue nil
-    raise "User not authenticated" if token != hard_coded_token
+    raise "User not authenticated" if token.blank?
+    user_details = JwtTokenUtils.decode(token).first
+    begin
+      $user = User.find_by(id: user_details["user_id"])#, employer_type: user_details["user_type"])
+      $session = Session.find_by(session_id: token)
+      if DateTime.now.to_i - $session.updated_at.to_i > 1800
+        $session.delete
+        $session = nil
+      else
+        $session.update!(updated_at: DateTime.now)
+      end
+    rescue
+      raise "User not authenticated"
+    end
+
+    raise "User not found" if $user.blank?
+    raise "Session expired" if $session.blank?
   end
 
-  def hard_coded_token
-    "sample_token"
+  def user
+    $user if $user.present?
   end
 
   def user_params
@@ -72,6 +106,14 @@ class AuthenticationController < ApplicationController
 
   def user_type_details
     params.require(:user_type_details)
+  end
+
+  def is_false_pincode?(pincode)
+    AddressUtils.is_false_pincode?(pincode)
+  end
+
+  def is_false_state_or_ut?(state_or_ut)
+    AddressUtils.is_false_state_or_ut?(state_or_ut)
   end
 
 end

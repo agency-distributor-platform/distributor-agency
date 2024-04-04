@@ -25,19 +25,6 @@ module BusinessLogic
       record.as_json
     end
 
-    def update_item_details(item_params)
-      bulk_upload({item_type: item_params[:item_type], data: [item_params[:data]]})
-    end
-
-    def bulk_upload(items)
-      obj_class = derive_item_obj_class(items[:item_type])
-      derive_model(items[:item_type]).transaction {
-        items[:data].each { |record|
-          obj_class.new(record).create_or_update(record, record_id)
-        }
-      }
-    end
-
     def get_sold_items(item_type, limit, page_number)
       offset = page_number*limit + 1 #page number is received, we get db offset
       item_obj_class = derive_item_obj_class(item_type)
@@ -59,7 +46,7 @@ module BusinessLogic
         buyer_json = item_mapping.buyer.as_json rescue nil
         buyers.push(buyer_json) if buyer_json.present?
       }
-      buyers
+      buyers.uniq
     end
 
     def get_buyer(buyer_id)
