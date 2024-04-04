@@ -45,7 +45,7 @@ class VehicleController < AuthenticationController
   end
 
   def vehicle_params
-    params.require(:vehicle_details).permit(:id, :registration_id, :chassis_id, :engine_id, :manufacturing_year, :cost_price, :loan_or_agreement_number, :stock_entry_date, :comments, :location, :vehicle_model_id, :distributor_id, comments: [], :city, :state, :pincode).to_h.deep_symbolize_keys
+    params.require(:vehicle_details).permit(:id, :registration_id, :chassis_id, :engine_id, :manufacturing_year, :cost_price, :loan_or_agreement_number, :stock_entry_date, :comments, :location, :vehicle_model_id, :distributor_id, :city, :state, :pincode, comments: []).to_h.deep_symbolize_keys
   end
 
 end
