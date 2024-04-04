@@ -21,8 +21,8 @@ class VehicleController < AuthenticationController
   end
 
   def get_vehicle_details
-    if salesperson.present?
-      render json:
+    # if salesperson.present?
+      render json: {}
   end
 
   private
