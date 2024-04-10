@@ -13,7 +13,7 @@ class UserController < AuthenticationController
 
   private
 
-  def derived_user_details(user_details)
+  def derive_user_details(user_details)
     user_details["id"] = convert_id_to_uuid(user_details["id"])
     user_details["employer_id"] = convert_id_to_uuid(user_details["employer_id"])
     user_details.delete("password")
