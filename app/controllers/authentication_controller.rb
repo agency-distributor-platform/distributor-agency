@@ -82,7 +82,8 @@ class AuthenticationController < ApplicationController
     begin
       $user = User.find_by(id: user_details["user_id"])#, employer_type: user_details["user_type"])
       $session = Session.find_by(session_id: token)
-      if DateTime.now.to_i - $session.updated_at.to_i > 1800
+      #TO-DO: Make the time expiry constant
+      if DateTime.now.to_i - $session.updated_at.to_i > 1800000
         $session.delete
         $session = nil
       else

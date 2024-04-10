@@ -9,6 +9,6 @@ class ApplicationController < ActionController::API
   end
 
   def convert_uuid_to_id(uuid)
-    Base64.decode64(uuid.to_s)
+    Base64.decode64(uuid.to_s).to_i
   end
 end
