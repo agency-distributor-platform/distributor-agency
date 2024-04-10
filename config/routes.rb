@@ -24,6 +24,9 @@ Rails.application.routes.draw do
   patch "/distributor/edit", to: "distributor#edit" #done
   patch "/salesperson/edit", to: "salesperson#edit" #done
 
+  get "/current_user_details", to: "user#current_user_details"
+  get "/user/:user_id", to: "user#user_details"
+
   put "/vehicle", to: "vehicles#create_or_edit_vehicle_details" #TO-DO
   get "/vehicles", to: "vehicles#get_vehicles" #TO-DO
   get "/vehicles/:vehicle_id", to: "vehicles#get_vehicle_details" #TO-DO
