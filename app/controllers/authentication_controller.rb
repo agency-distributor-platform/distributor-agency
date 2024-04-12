@@ -13,7 +13,7 @@ class AuthenticationController < ApplicationController
     password = params[:password]
     employer_type = params[:login_type]
     user = User.find_by(email: , password: , employer_type: )
-    derived_user_details = derive_user_details(user)
+    # derived_user_details = derive_user_details(user)
     if user.present?
       token = JwtTokenUtils.encode({
         timestamp: DateTime.now.to_s,
@@ -24,7 +24,7 @@ class AuthenticationController < ApplicationController
       Session.create!(session_id: token)#, user_id: user.id)
       render json: {
         token:,
-        user_details: derive_user_details
+        # user_details: derive_user_details
       }, status: 200
     else
       render json: {
