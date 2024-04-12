@@ -13,6 +13,7 @@ class AuthenticationController < ApplicationController
     password = params[:password]
     employer_type = params[:login_type]
     user = User.find_by(email: , password: , employer_type: )
+    derived_user_details = derive_user_details(user)
     if user.present?
       token = JwtTokenUtils.encode({
         timestamp: DateTime.now.to_s,
@@ -22,7 +23,8 @@ class AuthenticationController < ApplicationController
       })
       Session.create!(session_id: token)#, user_id: user.id)
       render json: {
-        token:
+        token:,
+        user_details: derive_user_details
       }, status: 200
     else
       render json: {
@@ -119,6 +121,19 @@ class AuthenticationController < ApplicationController
 
   def is_false_state_or_ut?(state_or_ut)
     AddressUtils.is_false_state_or_ut?(state_or_ut)
+  end
+
+  def derive_user_details(user_record)
+    user_details = user_record.as_json
+    user_details["id"] = convert_id_to_uuid(user_details["id"])
+    user_details["employer_id"] = convert_id_to_uuid(user_details["employer_id"])
+    user_details.delete("password")
+
+    user_details["user_type_details"] = user_record.employer.as_json
+    user_details["user_type_details"]["id"] = convert_id_to_uuid(user_details["user_type_details"]["id"])
+    user_details["user_type_details"]["agency_id"] = convert_id_to_uuid(user_details["user_type_details"]["agency_id"]) if user_details["user_type_details"]["agency_id"].present?
+
+    user_details
   end
 
 end
