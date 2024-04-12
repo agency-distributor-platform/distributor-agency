@@ -101,6 +101,10 @@ class AuthenticationController < ApplicationController
     $user if $user.present?
   end
 
+  def session_user_service
+    UserService.new(user)
+  end
+
   def user_params
     params.require(:user_details).permit(:email, :name, :phone, :password)
   end

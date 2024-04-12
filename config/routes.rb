@@ -24,15 +24,16 @@ Rails.application.routes.draw do
   patch "/distributor/edit", to: "distributor#edit" #done
   patch "/salesperson/edit", to: "salesperson#edit" #done
 
-  get "/current_user_details", to: "user#current_user_details"
-  get "/user/:user_id", to: "user#user_details"
+  get "/current_user_details", to: "user#current_user_details" #done
+  get "/user/:user_id", to: "user#user_details" #done
 
+  get "/statuses", to: "item#statuses"
   put "/vehicle", to: "vehicles#create_or_edit_vehicle_details" #TO-DO
   get "/vehicles", to: "vehicles#get_vehicles" #TO-DO
   get "/vehicles/:vehicle_id", to: "vehicles#get_vehicle_details" #TO-DO
 
-  patch "/sell_vehicle", to: "item#sell_vehicle" #TO-DO #downpayment/partial sales also handled in this api #buyer information maybe created here
-  patch "/book_vehicle", to: "item#book_vehicle" #TO-DO #buyer info to be inputted, create buyer maybe possible
+  put "/sell_vehicle", to: "item#sell_vehicle" #TO-DO #downpayment/partial sales also handled in this api #buyer information maybe created here
+  put "/book_vehicle", to: "item#book_vehicle" #TO-DO #buyer info to be inputted, create buyer maybe possible
   put "/distributor_share", to: "item#add_or_edit_distributor_share" #TO-DO
   put "/salesperson_share", to: "item#add_or_edit_salesperson_share" #TO-DO
 
