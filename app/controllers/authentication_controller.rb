@@ -13,8 +13,8 @@ class AuthenticationController < ApplicationController
     password = params[:password]
     employer_type = params[:login_type]
     user = User.find_by(email: , password: , employer_type: )
-    derived_user_details = derive_user_details(user)
     if user.present?
+      derived_user_details = derive_user_details(user)
       token = JwtTokenUtils.encode({
         timestamp: DateTime.now.to_s,
         email: user.email,
@@ -101,6 +101,11 @@ class AuthenticationController < ApplicationController
 
   def user
     $user if $user.present?
+  end
+
+  def employer
+    @employer = @employer || $user.employer if user.present?
+    @employer
   end
 
   def session_user_service

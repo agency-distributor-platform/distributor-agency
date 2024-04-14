@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_01_113058) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_13_233537) do
   create_table "agencies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -28,6 +28,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_01_113058) do
   create_table "booking_transactions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.float "booking_price"
     t.string "booking_persona_type"
+    t.bigint "transaction_id"
+    t.index ["transaction_id"], name: "fk_rails_51a0d5c5c2"
   end
 
   create_table "buyers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -110,6 +112,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_01_113058) do
     t.float "selling_price"
     t.float "due_price"
     t.string "selling_persona_type"
+    t.bigint "transaction_id"
+    t.index ["transaction_id"], name: "fk_rails_bcc972863e"
   end
 
   create_table "sessions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -126,8 +130,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_01_113058) do
   create_table "transactions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "item_mapping_record_id"
     t.datetime "transaction_date"
-    t.string "transaction_type"
-    t.bigint "transaction_id"
+    t.string "payment_transaction_id"
     t.index ["item_mapping_record_id"], name: "fk_rails_bd2cf037af"
   end
 
@@ -160,7 +163,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_01_113058) do
     t.integer "manufacturing_year"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "agency_id"
     t.float "cost_price"
     t.string "loan_or_agreement_number"
     t.string "stock_entry_date"
@@ -169,20 +171,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_01_113058) do
     t.string "city"
     t.string "state"
     t.integer "pincode"
-    t.index ["agency_id"], name: "fk_rails_bc1c0879fa"
     t.index ["chassis_id"], name: "vehicles_unique_chassis_id", unique: true
     t.index ["engine_id"], name: "vehicles_unique_engine_id", unique: true
     t.index ["registration_id"], name: "vehicles_unique_registration_id", unique: true
     t.index ["vehicle_model_id"], name: "fk_rails_83f60c4d50"
   end
 
+  add_foreign_key "booking_transactions", "transactions"
   add_foreign_key "distributors", "agencies"
   add_foreign_key "item_mapping_records", "agencies"
   add_foreign_key "item_mapping_records", "buyers"
   add_foreign_key "item_mapping_records", "distributors"
   add_foreign_key "item_mapping_records", "statuses"
   add_foreign_key "prospect_users", "vehicle_models"
+  add_foreign_key "selling_transactions", "transactions"
   add_foreign_key "transactions", "item_mapping_records"
-  add_foreign_key "vehicles", "agencies"
   add_foreign_key "vehicles", "vehicle_models"
 end

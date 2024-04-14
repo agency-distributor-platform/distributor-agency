@@ -1,10 +1,10 @@
 class Vehicle < ApplicationRecord
   belongs_to :vehicle_model, class_name: "VehicleModel", foreign_key: "vehicle_model_id", optional: true
 
-  has_one :item_mapping, as: :item
-  has_one :agency, through: :item_mapping
-  has_one :distributor, through: :item_mapping
-  has_one :buyer, through: :item_mapping
+  has_one :item_status, as: :item
+  has_one :agency, through: :item_status
+  has_one :distributor, through: :item_status
+  has_one :buyer, through: :item_status
 
   validates :registration_id, presence: true, uniqueness: true
   validates :chassis_id, presence: true, uniqueness: true

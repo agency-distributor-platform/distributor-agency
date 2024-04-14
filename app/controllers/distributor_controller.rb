@@ -39,6 +39,18 @@ class DistributorController < AuthenticationController
     render json: {}, status: 204
   end
 
+  def get_sold_vehicles
+    status = Status.find_by(name: "Sold")
+    filter_hash = {item_type: "Vehicle", status: , distributor: distributor.record}
+    render json: ItemService::ItemStatusObj.get_items(filter_hash)
+  end
+
+  def get_booked_vehicles
+    status = Status.find_by(name: "Booked")
+    filter_hash = {item_type: "Vehicle", status: , distributor: distributor.record}
+    render json: ItemService::ItemStatusObj.get_items(filter_hash)
+  end
+
   private
 
   def edit_params

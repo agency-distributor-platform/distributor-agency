@@ -28,12 +28,6 @@ module BusinessLogic
       @agency
     end
 
-    def get_sold_items(item_type, limit, page_number)
-      offset = page_number*limit + 1 #page number is received, we get db offset
-      item_obj_class = derive_item_obj_class(item_type)
-      item_obj_class.get_sold_items(ItemMapping.eager_load(:distributor).eager_load(:agency).where(distributor_id: record_id).where(item_type: ).where(seller_persona_id: Persona.distributor_id), limit, offset)
-    end
-
     def derive_item_obj_class(item_type)
       "BusinessLogic::#{item_type.capitalize}Obj".constantize
     end
@@ -59,25 +53,12 @@ module BusinessLogic
       Buyer.find_by(id: buyer_id).as_json if valid_buyer(buyer_id)
     end
 
-    def get_items(item_type)
-      ItemMapping.where({distributor_id: record_id, item_type: }).as_json
+    def is_valid_vehicle?(item_obj)
+      item_obj.distributor.eql?(self)
     end
 
-    def get_item(item_details)
-      item_type = item_details[:item_type]
-      item_id = item_details[:item_id]
-      ItemMapping.where({distributor_id: record_id, item_type: , item_id: }).first.as_json
-    end
-
-    def get_items(item_type)
-      item_ids = ItemMapping.where({distributor_id: record_id, item_type: }).pluck(:item_id)
-      derive_model(item_type).where(id: item_ids).as_json
-    end
-
-    def get_item(item_details)
-      item_type = item_details[:item_type]
-      item_id = item_details[:item_id]
-      derive_model(item_type).find_by(id: item_id).as_json if ItemMapping.where({distributor_id: record_id, item_type: , item_id: }).present?
+    def eql?(other_distributor_obj)
+      record == other_distributor_obj.record
     end
 
     private

@@ -12,6 +12,18 @@ class SalespersonController < AuthenticationController
     render json: salesperson.as_json, status: 200
   end
 
+  def get_sold_vehicles
+    status = Status.find_by(name: "Sold")
+    filter_hash = {item_type: "Vehicle", status: , salesperson: salesperson.record}
+    render json: ItemService::ItemStatusObj.get_items(filter_hash)
+  end
+
+  def get_booked_vehicles
+    status = Status.find_by(name: "Booked")
+    filter_hash = {item_type: "Vehicle", status: , salesperson: salesperson.record}
+    render json: ItemService::ItemStatusObj.get_items(filter_hash)
+  end
+
 
   private
 

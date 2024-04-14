@@ -1,5 +1,3 @@
-require_relative "./vehicle_obj"
-
 module BusinessLogic
   class AgencyObj
 
@@ -66,6 +64,14 @@ module BusinessLogic
 
     def record_id
       record.id
+    end
+
+    def is_valid_vehicle?(item_obj)
+      item_obj.agency.eql?(self)
+    end
+
+    def eql?(other_agency_obj)
+      record == other_agency_obj.record
     end
 
     private

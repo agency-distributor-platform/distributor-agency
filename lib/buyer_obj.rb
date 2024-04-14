@@ -8,11 +8,7 @@ module BusinessLogic
     end
 
     def create_or_update(buyer_details)
-      if record.persisted?
-        record.update(buyer_details)
-      else
-        record.save!
-      end
+      record.update(buyer_details)
     end
 
     def record_id

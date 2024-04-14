@@ -6,6 +6,10 @@ module MigrationUtils
     rename_table(old_table_name, new_table_name) if table_exists?(old_table_name)
   end
 
+  def rename_column_with_verification(table_name, old_column_name, new_column_name)
+    rename_column(table_name, old_column_name, new_column_name) if column_exists?(table_name, old_column_name)
+  end
+
   def alter_column_datatype_with_verification(table_name, column_name, datatype)
     change_column table_name, column_name, datatype if table_exists?(table_name) && column_exists?(table_name, column_name)
     #Ex:- change_column("admin_users", "email", :string, :limit =>25)

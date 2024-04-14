@@ -1,3 +1,3 @@
 class Status < ApplicationRecord
-  has_many :item_mapping
+  has_many :item_statuses
 end
