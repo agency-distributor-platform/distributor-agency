@@ -32,7 +32,6 @@ class SalespersonController < AuthenticationController
   end
 
   def set_salesperson_obj
-    byebug
     record = Salesperson.find_by(id: user.employer_id)
     record = nil if !(user.employer_type == "Salesperson")
     raise "Check salesperson id" if record.blank?

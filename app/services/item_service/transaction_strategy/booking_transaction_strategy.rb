@@ -3,7 +3,6 @@ module ItemService
     class BookingTransactionStrategy < BaseTransactionStrategy
 
       def initialize(params)
-        byebug
         @record = params[:id].present? ? model.find_by(id: params[:id]) : model.new(params)
         params.delete(:id)
         @persona_type = params[:booking_persona_type]

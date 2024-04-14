@@ -51,7 +51,6 @@ module ItemService
     def transact_item(transact_params)
       ApplicationRecord.transaction do
         item_status_obj.add_buyer(transact_params[:buyer_details])
-        byebug
         item_status_obj.transact(TransactionObj.new(transact_params[:transaction]), Utils::TransactionUtils.derive_transaction(transact_params[:transaction_type]).new(transact_params[:transaction_type_details]))
       end
     end

@@ -37,7 +37,7 @@ Rails.application.routes.draw do
   put "/distributor_share", to: "item#add_or_edit_distributor_share" #done
   put "/salesperson_share", to: "item#add_or_edit_salesperson_share" #done
   get "/vehicles/:vehicle_id/transactions", to: "vehicles#get_vehicle_transactions" #done
-  patch "/edit_transaction/:transaction_id", to: "item#edit_transaction" #TO-DO
+  patch "/edit_transaction/:transaction_id", to: "item#edit_transaction" #TO-DO #transaction record, as well as transaction details
 
   get "/agency/sold_vehicles", to: "agency#get_sold_vehicles" #done
   get "/distributor/sold_vehicles", to: "distributor#get_sold_vehicles" #done
