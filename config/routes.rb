@@ -33,11 +33,11 @@ Rails.application.routes.draw do
   get "/vehicles", to: "vehicles#get_vehicles" #done
   get "/vehicles/:vehicle_id", to: "vehicles#get_vehicle_details" #done
 
-  put "/vehicles/:transaction_type", to: "vehicles#transact_vehicle" #TO-DO #downpayment/partial sales also handled in this api #buyer information maybe created here
-  patch "/distributor_share", to: "item#add_or_edit_distributor_share" #TO-DO
-  patch "/salesperson_share", to: "item#add_or_edit_salesperson_share" #TO-DO
-  get "/vehicles/:vehicle_id/transactions", to: "vehicles#get_vehicle_transactions" #TO-DO
-  patch "/edit_transaction", to: "item#edit_transaction"
+  put "/vehicles/:transaction_type", to: "vehicles#transact_vehicle" #done #downpayment/partial sales also handled in this api #buyer information maybe created here
+  put "/distributor_share", to: "item#add_or_edit_distributor_share" #done
+  put "/salesperson_share", to: "item#add_or_edit_salesperson_share" #done
+  get "/vehicles/:vehicle_id/transactions", to: "vehicles#get_vehicle_transactions" #done
+  patch "/edit_transaction/:transaction_id", to: "item#edit_transaction" #TO-DO
 
   get "/agency/sold_vehicles", to: "agency#get_sold_vehicles" #done
   get "/distributor/sold_vehicles", to: "distributor#get_sold_vehicles" #done
@@ -46,9 +46,9 @@ Rails.application.routes.draw do
   get "/salesperson/sold_vehicles", to: "salesperson#get_sold_vehicles" #dev done, to test
   get "/salesperson/booked_vehicles", to: "salesperson#get_booked_vehicles" #dev done, to test
 
-  get "/buyers", to: "buyer#get_buyers" #TO-DO
-  get "/buyers/:buyer_id", to: "buyer#get_buyer" #TO-DO
-  patch "/buyer/:buyer_id/edit", to: "buyer#edit" #TO-DO
+  # get "/buyers", to: "buyer#get_buyers" #TO-DO
+  # get "/buyers/:buyer_id", to: "buyer#get_buyer" #TO-DO
+  # patch "/buyer/:buyer_id/edit", to: "buyer#edit" #TO-DO
 
   post "/logout", to: "authentication#logout" #TO-DO
 end

@@ -56,6 +56,10 @@ module ItemService
       end
     end
 
+    def update_share(share_type, share)
+      item_status_obj.update_share(share_type, share)
+    end
+
     def model
       raise "This is an abstract class"
     end

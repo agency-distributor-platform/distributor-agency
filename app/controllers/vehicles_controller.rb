@@ -5,7 +5,7 @@ class VehiclesController < AuthenticationController
   include BusinessLogic
   attr_reader :agency, :distributor, :salesperson, :item_obj
   before_action :set_agency_obj_only, only: [:create_or_edit_vehicle_details, :assign_vehicle]
-  before_action :set_agency_or_distributor_or_salesperson_obj, only: [:get_vehicles, :get_vehicle_details, :transact_vehicle]
+  before_action :set_agency_or_distributor_or_salesperson_obj, only: [:get_vehicles, :get_vehicle_details, :transact_vehicle, :get_transaction_details, :get_vehicle_transactions]
 
   def create_or_edit_vehicle_details
     record_id = vehicle_params.delete(:id)
@@ -59,6 +59,18 @@ class VehiclesController < AuthenticationController
       transaction_type_details: transaction_type_params
     })
     render json:{}, status: 204
+  end
+
+  def get_vehicle_transactions
+    vehicle_obj = ItemService::VehicleObj.new({id: params[:vehicle_id]})
+    vehicle_item_status_obj = vehicle_obj.item_status_obj
+    if verify_session_user_for_item_status(vehicle_item_status_obj)
+      render json: vehicle_item_status_obj.get_transactions, status: 200
+    else
+      render json: {
+        "error" => "Forbidden"
+      }, status: 403
+    end
   end
 
   private
@@ -121,6 +133,10 @@ class VehiclesController < AuthenticationController
     transaction_details.delete(:payment_transaction_id)
     booking_transactions = transaction_details.permit(:booking_price, :booking_persona_type).to_h
     booking_transactions.blank? ? transaction_details.permit(:selling_price, :paid_amount, :selling_persona_type) : booking_transactions
+  end
+
+  def verify_session_user_for_item_status(item_status_obj)
+    (session_user_service.is_agency? && item_status_obj.agency.eql?(agency)) || (session_user_service.is_distributor? && item_status_obj.distributor.eql?(distributor)) || (session_user_service.is_salesperson? && item_status_obj.salesperson.record == salesperson.record)
   end
 
 end

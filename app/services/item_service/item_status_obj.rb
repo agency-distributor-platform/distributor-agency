@@ -53,15 +53,17 @@ module ItemService
       record.as_json
     end
 
-
     def transact(transaction_obj, transaction_strategy)
       #TO-DO: If already sold, raise error
       ApplicationRecord.transaction {
-        byebug
         transaction_obj.create_record(self)
         transaction_strategy.set_transaction_obj(transaction_obj)
         transaction_strategy.implement
       }
+    end
+
+    def transactions_by_type(transaction_type)
+      record.send(transaction_type)
     end
 
     def add_buyer(buyer_details)
@@ -69,6 +71,35 @@ module ItemService
       buyer_obj.create_or_update(buyer_details)
       record.buyer = buyer_obj.record
       record.save!
+    end
+
+    def agency
+      BusinessLogic::AgencyObj.new(record.agency)
+    end
+
+    def distributor
+      distributor_record = record.distributor
+      BusinessLogic::DistributorObj.new(distributor_record) if distributor_record.present?
+    end
+
+    def salesperson
+      salesperson_record = record.salesperson
+      BusinessLogic::SalespersonObj.new(salesperson_record) if salesperson_record.present?
+    end
+
+    def update_share(share_type, share)
+      record.send("#{share_type}=", share)
+      record.save!
+    end
+
+    def get_transactions
+      transactions_list = []
+      record.transactions.order(:id).each { |transaction_record|
+        transaction_obj = TransactionObj.new(transaction_record)
+        transaction_details = transaction_obj.get_transaction_details
+        transactions_list.push(transaction_obj.as_json.merge!({transaction_details: }))
+      }
+      transactions_list
     end
 
     private

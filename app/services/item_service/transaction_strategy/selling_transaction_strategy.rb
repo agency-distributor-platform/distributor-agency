@@ -22,7 +22,7 @@ module ItemService
 
       def implement
         super
-        previous_selling_transaction = transaction_obj.previous_transaction("selling_transactions")
+        previous_selling_transaction = transaction_obj.latest_recorded_transaction("selling_transactions")
         raise "Can't have new selling price for partially paid product. Please edit the selling price separately" if selling_price.present? && previous_selling_transaction.present?
         if selling_price.blank?
           previous_transaction_prices = previous_selling_transaction.get_prices
