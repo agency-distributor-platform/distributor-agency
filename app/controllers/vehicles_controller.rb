@@ -37,7 +37,7 @@ class VehiclesController < AuthenticationController
   def assign_vehicle
     vehicle_id = params[:vehicle_id]
     item_status_obj = ItemService::VehicleObj.new({id: vehicle_id}).item_status_obj
-    distributor_obj = BusinessLogic::DistributorObj.new({id: params[:distributor_id]})
+    distributor_obj = BusinessLogic::DistributorObj.new({id: convert_uuid_to_id(params[:distributor_id])})
     if distributor_obj.record_present?
       item_status_obj.assign_item(distributor_obj)
       render json: {}, status: 204
