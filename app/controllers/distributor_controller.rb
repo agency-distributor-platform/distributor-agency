@@ -26,9 +26,9 @@ class DistributorController < AuthenticationController
     render json: distributor.get_buyer(params[:buyer_id].to_i), status: 200
   end
 
-  def get_vehicles
-    render json: distributor.get_items("vehicle"), status: 200
-  end
+  # def get_vehicles
+  #   render json: distributor.get_items("vehicle"), status: 200
+  # end
 
   def get_vehicle_details
     render json: distributor.get_item({item_type: "vehicle", item_id: params[:vehicle_id]}), status: 200

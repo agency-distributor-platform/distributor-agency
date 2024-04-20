@@ -15,11 +15,12 @@ module ItemService
       results = []
       ItemStatus.includes(:status).includes(:distributor).includes(:salesperson).where(filter_hash).each { |record|
         record_hash = record.as_json
-        record_hash["salesperson_details"] = record.salesperson.as_json
+        record_hash["#{record_hash["item_type"]}_details"] = record.item.as_json
+        record_hash["salesperson_details"] = record.salesperson.as_json_with_converted_id rescue nil
         record_hash.delete(:salesperson_id)
         record_hash["status_details"] = record.status.as_json
         record_hash.delete(:status_id)
-        record_hash["distributor_details"] = record.distributor.as_json
+        record_hash["distributor_details"] = record.distributor.as_json_with_converted_id rescue nil
         record_hash.delete(:distributor_id)
         results.push(record_hash)
       }
