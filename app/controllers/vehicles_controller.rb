@@ -13,7 +13,7 @@ class VehiclesController < AuthenticationController
     check_state(vehicle_params[:state])
     vehicle_obj = ItemService::VehicleObj.new({id: record_id})
     vehicle_obj.create_or_update(vehicle_params, agency.record_id)
-    render json: vehicle_obj.as_json
+    render json: {}
   end
 
   def get_vehicles
