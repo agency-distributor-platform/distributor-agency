@@ -31,6 +31,7 @@ class VehiclesController < AuthenticationController
   def get_vehicle_details
     filter_hash = {item_type: "Vehicle", item_id: params[:vehicle_id]}
     filter_hash[:agency] = agency.record if salesperson.blank?
+    filter_hash[:distributor] = distributor if distributor.present?
     render json: ItemService::ItemStatusObj.get_items(filter_hash).first
   end
 
