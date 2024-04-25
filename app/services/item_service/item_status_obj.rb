@@ -22,6 +22,8 @@ module ItemService
         record_hash.delete(:status_id)
         record_hash["distributor_details"] = record.distributor.as_json_with_converted_id rescue nil
         record_hash.delete(:distributor_id)
+        #TO-DO -> Make this better, too specific for vehicle
+        record_hash["vehicle_model_details"] = record.item.vehicle_model.as_json rescue nil
         results.push(record_hash)
       }
       results
