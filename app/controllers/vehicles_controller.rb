@@ -73,6 +73,12 @@ class VehiclesController < AuthenticationController
     end
   end
 
+  def delete
+    vehicle = Vehicle.find_by(id: params[:vehicle_id])
+    vehicle.delete rescue nil
+    render json: {}
+  end
+
   private
 
   def set_agency_obj_only
