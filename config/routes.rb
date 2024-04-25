@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
   post "/vehicle_model/create", to: "vehicle_model#create" #done
   patch "/vehicle_model/:id", to: "vehicle_model#edit" #done
+  get "/vehicle_model/search", to: "vehicle_model#search" #TO-DO
   get "/vehicle_model/:id", to: "vehicle_model#show" #done
   get "/vehicle_models", to: "vehicle_model#list" #done
   delete "/vehicle_model/:id", to: "vehicle_model#delete" #done
@@ -32,6 +33,7 @@ Rails.application.routes.draw do
   patch "/vehicle/:vehicle_id/assign_vehicle", to: "vehicles#assign_vehicle" #done
   get "/vehicles", to: "vehicles#get_vehicles" #done
   get "/vehicles/:vehicle_id", to: "vehicles#get_vehicle_details" #done
+  delete "/vehicle/:vehicle_id", to: "vehicles#delete" #to test
 
   put "/vehicles/:transaction_type", to: "vehicles#transact_vehicle" #done #downpayment/partial sales also handled in this api #buyer information maybe created here
   put "/distributor_share", to: "item#add_or_edit_distributor_share" #done
@@ -45,6 +47,8 @@ Rails.application.routes.draw do
   get "/distributor/booked_vehicles", to: "distributor#get_booked_vehicles" #done
   get "/salesperson/sold_vehicles", to: "salesperson#get_sold_vehicles" #dev done, to test
   get "/salesperson/booked_vehicles", to: "salesperson#get_booked_vehicles" #dev done, to test
+
+
 
   # get "/buyers", to: "buyer#get_buyers" #TO-DO
   # get "/buyers/:buyer_id", to: "buyer#get_buyer" #TO-DO
