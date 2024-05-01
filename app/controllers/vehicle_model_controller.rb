@@ -30,7 +30,7 @@ class VehicleModelController < AuthenticationController
     substring_search_query = "%#{params[:query]}%"
     name_search = VehicleModel.where("company_name like :query", query: substring_search_query).as_json
     model_search = VehicleModel.where("model like :query", query: substring_search_query).as_json
-    render json: name_search + model_search, status: 200
+    render json: (name_search + model_search).uniq, status: 200
   end
 
   private
