@@ -71,8 +71,21 @@ class AuthenticationController < ApplicationController
         error: e.message
       }, status: 500
     end
+  end
 
+  def change_password
+    change_password_details = change_password_params
+    if user.password.eql?(change_password_details[:current_password])
+      user.update(password: change_password_details[:new_password])
+    else
+      render json: {
+        error: "Wrong current password"
+      }, status: :unprocessable_entity
+    end
+  end
 
+  def logout
+    $session.delete
   end
 
   private
@@ -139,6 +152,10 @@ class AuthenticationController < ApplicationController
     user_details["user_type_details"]["agency_id"] = convert_id_to_uuid(user_details["user_type_details"]["agency_id"]) if user_details["user_type_details"]["agency_id"].present?
 
     user_details
+  end
+
+  def change_password_params
+    params.permit(:current_password, :new_password)
   end
 
 end

@@ -51,11 +51,12 @@ Rails.application.routes.draw do
 
   get "/total_earnings", to: "item#earnings"
   # get "/vehicle/personal_vehicle_transactions" #-> Bookings and sellings
-  # get "/buyers", to: "buyer#get_buyers" #TO-DO
-  # get "/buyers/:buyer_id", to: "buyer#get_buyer" #TO-DO
-  # patch "/buyer/:buyer_id/edit", to: "buyer#edit" #TO-DO
+  get "/buyers", to: "buyer#get_buyers"
+  get "/buyers/:buyer_id", to: "buyer#get_buyer"
+  patch "/buyer/:buyer_id/edit", to: "buyer#edit"
+  patch "/change_password", to: "authentication#change_password"
 
-  post "/logout", to: "authentication#logout" #TO-DO
+  delete "/logout", to: "authentication#logout" #TO-DO
 end
 
 #TO-DO Logout routes

@@ -15,5 +15,9 @@ module BusinessLogic
       record.id
     end
 
+    def as_json
+      record.as_json_with_converted_id
+    end
+
   end
 end

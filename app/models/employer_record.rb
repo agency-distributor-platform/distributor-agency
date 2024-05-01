@@ -11,4 +11,8 @@ class EmployerRecord < ApplicationRecord
     })
   end
 
+  def buyer_exists?(buyer_record)
+    item_statuses.pluck(:buyer_id).include?(buyer_record.id)
+  end
+
 end
