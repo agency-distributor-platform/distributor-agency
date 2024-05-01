@@ -61,6 +61,19 @@ module BusinessLogic
       record == other_distributor_obj.record
     end
 
+    def get_earnings
+      revenue = 0
+      record.item_statuses.each { |item|
+        item_status_obj = ItemService::ItemStatusObj.new(item)
+        revenue = revenue + item_status_obj.distributor_share
+      }
+
+      {
+        revenue_on_paper: revenue,
+        total_revenue: revenue
+      }
+    end
+
     private
 
     def valid_buyer(buyer_id)

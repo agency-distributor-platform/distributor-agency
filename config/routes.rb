@@ -49,8 +49,8 @@ Rails.application.routes.draw do
   get "/salesperson/booked_vehicles", to: "salesperson#get_booked_vehicles" #dev done, to test
 
 
-  # get "/total_earnings"
-  # get "/vehicle/personal_vehicle_transactions" -> Bookings and sellings (fully sold ones, partial selling to be done later)
+  get "/total_earnings", to: "item#earnings"
+  # get "/vehicle/personal_vehicle_transactions" #-> Bookings and sellings
   # get "/buyers", to: "buyer#get_buyers" #TO-DO
   # get "/buyers/:buyer_id", to: "buyer#get_buyer" #TO-DO
   # patch "/buyer/:buyer_id/edit", to: "buyer#edit" #TO-DO

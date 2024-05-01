@@ -1,4 +1,8 @@
+require "#{Rails.root}/lib/all_business_logic"
+
 class ItemController < AuthenticationController
+
+  include BusinessLogic
 
   def statuses
     if session_user_service.is_distributor? || session_user_service.is_agency?
@@ -30,6 +34,15 @@ class ItemController < AuthenticationController
         error: "User is forbidden"
       }, status: 403
     end
+  end
+
+  def earnings
+    employer_obj =  if verify_agency_obj
+                      BusinessLogic::AgencyObj.new(employer.as_json.deep_symbolize_keys)
+                    else
+                      BusinessLogic::AgencyObj.new(employer.as_json.deep_symbolize_keys)
+                    end
+    render json: {earnings: employer_obj.get_earnings}
   end
 
   private

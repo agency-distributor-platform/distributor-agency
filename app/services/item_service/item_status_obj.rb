@@ -106,6 +106,44 @@ module ItemService
       transactions_list
     end
 
+    def total_revenue
+
+      revenue = {
+        revenue_on_paper: 0,
+        actual_revenue: 0
+      }
+
+      latest_selling_transaction_record = transactions_by_type("selling_transactions").last
+      return revenue if latest_selling_transaction_record.blank?
+
+      selling_price = latest_selling_transaction_record.selling_price
+
+      revenue = {
+        revenue_on_paper: selling_price,
+        actual_revenue: selling_price - latest_selling_transaction_record.due_price
+      }
+
+      revenue
+    end
+
+    def distributor_share
+      distributor_share = record.distributor_share
+      if distributor_share.present?
+        distributor_share
+      else
+        0
+      end
+    end
+
+    def salesperson_share
+      salesperson_share = record.salesperson_share
+      if salesperson_share.present?
+        salesperson_share
+      else
+        0
+      end
+    end
+
     private
 
     def record_id

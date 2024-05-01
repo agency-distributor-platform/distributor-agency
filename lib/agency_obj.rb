@@ -56,6 +56,24 @@ module BusinessLogic
       derive_model(item_type).where(id: item_ids).as_json
     end
 
+    def get_earnings
+      total_earnings = {
+        revenue_on_paper: 0,
+        actual_revenue: 0,
+        distributor_share: 0,
+        salesperson_share: 0
+      }
+      record.item_statuses.each { |item|
+        item_status_obj = ItemService::ItemStatusObj.new(item)
+        total_revenue_hash = item_status_obj.total_revenue
+        total_earnings[:revenue_on_paper] = total_earnings[:revenue_on_paper] + total_revenue_hash[:revenue_on_paper]
+        total_earnings[:actual_revenue] = total_earnings[:actual_revenue] + total_revenue_hash[:actual_revenue]
+        total_earnings[:distributor_share] = total_earnings[:distributor_share] + item_status_obj.distributor_share
+        total_earnings[:salesperson_share] = total_earnings[:salesperson_share] + item_status_obj.salesperson_share
+      }
+      total_earnings
+    end
+
     def get_item(item_details)
       item_type = item_details[:item_type]
       item_id = item_details[:item_id]
