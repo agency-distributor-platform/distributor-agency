@@ -7,6 +7,14 @@ module ItemService
       @record = params[:id].present? ? Transaction.find_by(id: params[:id]) : Transaction.new(params)
     end
 
+    def has_distributor_assigned?
+      item_status_obj.distributor.present?
+    end
+
+    def has_salesperson_assigned?
+      item_status_obj.salesperson.present?
+    end
+
     def create_record(item_status_obj)
       record.item_status = item_status_obj.record
       record.save!

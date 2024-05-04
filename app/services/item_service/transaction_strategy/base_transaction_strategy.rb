@@ -4,6 +4,8 @@ module ItemService
 
       attr_reader :record, :transaction_details, :transaction_obj, :item_status_obj, :persona_type
 
+      ELIGIBLE_PERSONAS = ["Agency", "Distributor", "Salesperson"]
+
       def set_transaction_obj(transaction_obj)
         @transaction_obj = transaction_obj
         @item_status_obj = transaction_obj.item_status_obj
