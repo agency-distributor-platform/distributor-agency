@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_13_233537) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_04_134616) do
   create_table "agencies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -61,6 +61,18 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_13_233537) do
     t.integer "pincode"
     t.index ["agency_id"], name: "fk_rails_216df4e8fd"
     t.index ["email"], name: "distributors_unique_email", unique: true
+  end
+
+  create_table "inquiries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "vehicle_model"
+    t.float "starting_price"
+    t.float "ending_price"
+    t.text "comments"
+    t.integer "year"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "agency_id"
+    t.index ["agency_id"], name: "fk_rails_6a64f6ed3a"
   end
 
   create_table "item_mapping_records", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -179,6 +191,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_13_233537) do
 
   add_foreign_key "booking_transactions", "transactions"
   add_foreign_key "distributors", "agencies"
+  add_foreign_key "inquiries", "agencies"
   add_foreign_key "item_mapping_records", "agencies"
   add_foreign_key "item_mapping_records", "buyers"
   add_foreign_key "item_mapping_records", "distributors"

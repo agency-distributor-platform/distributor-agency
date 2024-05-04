@@ -56,10 +56,10 @@ Rails.application.routes.draw do
   patch "/buyer/:buyer_id/edit", to: "buyer#edit"
   patch "/change_password", to: "authentication#change_password"
 
-  # get "/inquiries", to: "inquiry#list" #TO-DO
-  # post "/inquiry", to: "inquiry#create" #TO-DO
+  get "/inquiries", to: "inquiry#list" #TO-DO
+  post "/inquiry", to: "inquiry#create" #TO-DO
 
-  delete "/logout", to: "authentication#logout" #TO-DO
+  delete "/logout", to: "authentication#logout"
 end
 
 #TO-DO Logout routes
