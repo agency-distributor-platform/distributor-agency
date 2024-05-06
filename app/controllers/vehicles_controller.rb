@@ -25,7 +25,7 @@ class VehiclesController < AuthenticationController
     else
       filter_hash = {item_type: "Vehicle", agency: agency.record}
       filter_hash[:status] = status if status.present?
-      filter_hash[distributor: distributor.record] if assigned.present?
+      filter_hash[:distributor] = distributor.record if assigned.present?
     end
     render json: ItemService::ItemStatusObj.get_items(filter_hash)
   end
