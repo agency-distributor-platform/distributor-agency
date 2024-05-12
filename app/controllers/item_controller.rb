@@ -42,6 +42,7 @@ class ItemController < AuthenticationController
                     else
                       BusinessLogic::AgencyObj.new(employer.as_json.deep_symbolize_keys)
                     end
+    Rails.logger.error(employer)
     Rails.logger.error(employer_obj)
     Rails.logger.error("----------------")
     render json: {earnings: employer_obj.get_earnings}
