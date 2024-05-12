@@ -40,7 +40,7 @@ class ItemController < AuthenticationController
     employer_obj =  if verify_agency_obj
                       BusinessLogic::AgencyObj.new(employer.as_json.deep_symbolize_keys)
                     else
-                      BusinessLogic::AgencyObj.new(employer.as_json.deep_symbolize_keys)
+                      BusinessLogic::DistributorObj.new(employer.as_json.deep_symbolize_keys)
                     end
     Rails.logger.error(employer)
     Rails.logger.error(employer_obj)
