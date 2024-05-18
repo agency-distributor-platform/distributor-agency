@@ -25,11 +25,10 @@ module ItemService
     end
 
     def latest_recorded_transaction(transaction_type)
-      #TO-DO: Return a selling_transaction_object instance instead of a selling_transaction_strategy instance
+      #TO-DO: Return a selling_transaction_object/booking_transaction_object instance instead of a selling_transaction_strategy/booking_transaction_strategy instance
       #TO-DO: record.item_status -> item_status_obj
-      selling_transaction_record = record.item_status.send(transaction_type).order(id: :desc).limit(1).first
-      return TransactionStrategy::SellingTransactionStrategy.new(selling_transaction_record, true) if selling_transaction_record.present?
-      selling_transaction_record
+      transaction_record = record.item_status.send(transaction_type).order(id: :desc).limit(1).first
+      return "TransactionStrategy::#{transaction_type.singularize.classify}Strategy".constantize.new(transaction_record, true) if transaction_record.present?
     end
 
     def previous_transaction(transaction_type)
@@ -38,7 +37,7 @@ module ItemService
     end
 
     def get_transaction_details
-      #TO-DO: Return a selling_transaction_object instance instead of a selling_transaction_active_record instance
+      #TO-DO: Return a selling_transaction_object/bookin_transaction_object instance instead of a selling_transaction_active_record/booking_transaction_active_record instance
       transaction_details = {}
       ["sell", "book"].each { |transaction_type|
         transaction_details = "ItemService::#{transaction_type.capitalize}Obj".constantize.new(record.send("#{transaction_type}ing_transaction")) rescue next
