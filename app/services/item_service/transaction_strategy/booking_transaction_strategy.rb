@@ -16,6 +16,12 @@ module ItemService
         }
       end
 
+      def get_prices
+        {
+          booking_price: record.booking_price
+        }
+      end
+
       private
 
       def model
