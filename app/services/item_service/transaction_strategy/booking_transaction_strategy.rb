@@ -2,7 +2,7 @@ module ItemService
   module TransactionStrategy
     class BookingTransactionStrategy < BaseTransactionStrategy
 
-      def initialize(params)
+      def initialize(params, db_record=true)
         @record = params[:id].present? ? model.find_by(id: params[:id]) : model.new(params)
         params.delete(:id)
         @persona_type = params[:booking_persona_type]
