@@ -18,14 +18,12 @@ class VehiclesController < AuthenticationController
 
   def get_vehicles
     status = Status.find_by(name: params[:status])
-    assigned = params[:assigned].present?
     if salesperson.present?
       filter_hash = {item_type: "Vehicle"}
       filter_hash[:status] = status if status.present?
     else
       filter_hash = {item_type: "Vehicle", agency: agency.record}
       filter_hash[:status] = status if status.present?
-      filter_hash[:distributor] = distributor.record if assigned.present?
     end
     render json: ItemService::ItemStatusObj.get_items(filter_hash)
   end
