@@ -28,6 +28,8 @@ module ItemService
       #TO-DO: Return a selling_transaction_object/booking_transaction_object instance instead of a selling_transaction_strategy/booking_transaction_strategy instance
       #TO-DO: record.item_status -> item_status_obj
       transaction_record = record.item_status.send(transaction_type).order(id: :desc).limit(1).first
+      p "TransactionStrategy::#{transaction_type.singularize.classify}Strategy"
+      p "------------------------------------------"
       return "TransactionStrategy::#{transaction_type.singularize.classify}Strategy".constantize.new(transaction_record, true) if transaction_record.present?
     end
 
