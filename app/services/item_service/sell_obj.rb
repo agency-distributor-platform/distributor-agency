@@ -19,8 +19,7 @@ module ItemService
       else
         #TO-DO: Use current class to get due amount
         previous_due_amount = previous_selling_transaction.due_price
-        previous_book_amount = previous_booking_transaction.present? ? previous_booking_transaction.booking_price : 0
-        record_as_json["paid_amount"] = previous_due_amount - current_due_amount - previous_book_amount
+        record_as_json["paid_amount"] = previous_due_amount - current_due_amount
       end
       record_as_json
     end
