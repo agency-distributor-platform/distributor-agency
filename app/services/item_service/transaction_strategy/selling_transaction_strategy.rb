@@ -25,16 +25,20 @@ module ItemService
         previous_selling_transaction = transaction_obj.latest_recorded_transaction("selling_transactions")
         previous_booking_transaction = transaction_obj.latest_recorded_transaction("booking_transactions")
         raise "Can't have new selling price for partially paid product. Please edit the selling price separately" if selling_price.present? && previous_selling_transaction.present?
+        booking_price = nil
         if selling_price.blank?
-          previous_transaction_prices = previous_selling_transaction.get_prices
-          @selling_price = previous_transaction_prices[:selling_price]
-          due_price = previous_transaction_prices[:due_price] - paid_amount
+          if previous_selling_transaction.present?
+            previous_transaction_prices = previous_selling_transaction.get_prices
+            @selling_price = previous_transaction_prices[:selling_price]
+            due_price = previous_transaction_prices[:due_price] - paid_amount
+          else
+          end
         else
           booking_price = previous_booking_transaction.present? ? previous_booking_transaction.get_prices[:booking_price] : 0
           due_price = selling_price - (paid_amount + booking_price)
         end
         raise "Paid amount exceeds selling price" if due_price < 0
-        create_record(selling_price, due_price)
+        create_record(selling_price, due_price - booking_price.to_i)
         update_status_of_item(due_price)
       end
 
