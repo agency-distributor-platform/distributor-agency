@@ -14,12 +14,12 @@ module ItemService
       previous_booking_transaction = transaction_obj.previous_transaction("booking_transactions")
       current_due_amount = record_as_json.delete("due_price")
       if previous_selling_transaction.blank?
-        previous_book_amount = previous_booking_transaction.present? ? previous_booking_transaction.get_prices[:booking_price] : 0
+        previous_book_amount = previous_booking_transaction.present? ? previous_booking_transaction.booking_price : 0
         record_as_json["paid_amount"] = record_as_json["selling_price"] - current_due_amount - previous_book_amount
       else
         #TO-DO: Use current class to get due amount
         previous_due_amount = previous_selling_transaction.due_price
-        previous_book_amount = previous_booking_transaction.present? ? previous_booking_transaction.get_prices[:booking_price] : 0
+        previous_book_amount = previous_booking_transaction.present? ? previous_booking_transaction.booking_price : 0
         record_as_json["paid_amount"] = previous_due_amount - current_due_amount - previous_book_amount
       end
       record_as_json
