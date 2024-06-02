@@ -1,11 +1,13 @@
 require "#{Rails.root}/lib/authentication/jwt_token.rb"
 require "#{Rails.root}/lib/utils/address_utils.rb"
+require "#{Rails.root}/lib/agency_obj.rb"
 
 class AuthenticationController < ApplicationController
   before_action :check_token_access, except: [:login, :register]
 
   include Authentication
   include Utils
+  include BusinessLogic
 
   #TO-DO: Catch all errors and send error api response
   def login
@@ -51,6 +53,7 @@ class AuthenticationController < ApplicationController
             state: user_type_details[:state],
             pincode: user_type_details[:pincode]
           })
+          BusinessLogic::AgencyObj.new(user_type_record).create_google_drive_folder if user_type_model == Agency
           user_type_id = user_type_record.id
           user_type_record.create_super_user if user_type_details[:email] != user_params[:email]
         end

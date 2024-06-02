@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
-  post "/register", to: "authentication#register" #done
+  post "/register", to: "authentication#register" #done, TO-DO -> create folder for agency
   post "/login", to: "authentication#login" #done
   get "/agencies", to: "pre_login#list_agencies" #done
   get "/distributors", to: "pre_login#list_distributors" #done
@@ -34,7 +34,7 @@ Rails.application.routes.draw do
   get "/vehicles", to: "vehicles#get_vehicles" #done
   get "/vehicles/:vehicle_id", to: "vehicles#get_vehicle_details" #done
   delete "/vehicle/:vehicle_id", to: "vehicles#delete" #to test
-
+  get "/vehicle/:vehicle_id/photos", to: "vehicles#photos"
   put "/vehicles/:transaction_type", to: "vehicles#transact_vehicle" #done #downpayment/partial sales also handled in this api #buyer information maybe created here
   put "/distributor_share", to: "item#add_or_edit_distributor_share" #done
   put "/salesperson_share", to: "item#add_or_edit_salesperson_share" #done

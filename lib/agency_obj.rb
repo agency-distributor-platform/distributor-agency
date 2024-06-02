@@ -1,6 +1,9 @@
+require_relative "./adapters/google_drive.rb"
+
 module BusinessLogic
   class AgencyObj
 
+    include Adapters
     attr_reader :record
 
     def initialize(record)
@@ -90,6 +93,12 @@ module BusinessLogic
 
     def eql?(other_agency_obj)
       record == other_agency_obj.record
+    end
+
+    def create_google_drive_folder
+      google_drive_adapter = GoogleDrive.new
+      application_root_folder_id = google_drive_adapter.get_dealdrive_folder_info
+      google_drive_adapter.create_folder("Agency_#{record.name}_#{record.id}", application_root_folder_id)
     end
 
     private

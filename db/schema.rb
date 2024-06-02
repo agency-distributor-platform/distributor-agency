@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_04_134616) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_01_065746) do
   create_table "agencies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -183,6 +183,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_04_134616) do
     t.string "city"
     t.string "state"
     t.integer "pincode"
+    t.string "google_drive_folder_id"
     t.index ["chassis_id"], name: "vehicles_unique_chassis_id", unique: true
     t.index ["engine_id"], name: "vehicles_unique_engine_id", unique: true
     t.index ["registration_id"], name: "vehicles_unique_registration_id", unique: true

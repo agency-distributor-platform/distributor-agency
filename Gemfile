@@ -14,6 +14,10 @@ gem "puma", "~> 5.0"
 
 gem 'jwt'
 
+gem 'rubyzip'
+
+gem 'mime-types', '~> 3.1'
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 
