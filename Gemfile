@@ -16,6 +16,8 @@ gem 'jwt'
 
 gem 'rubyzip'
 
+gem 'aws-sdk-s3'
+
 gem 'mime-types', '~> 3.1'
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
