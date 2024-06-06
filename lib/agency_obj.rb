@@ -1,4 +1,5 @@
-require_relative "./adapters/google_drive.rb"
+# require_relative "./adapters/google_drive.rb"
+require_relative "./adapters/s3_file.rb"
 
 module BusinessLogic
   class AgencyObj
@@ -95,10 +96,9 @@ module BusinessLogic
       record == other_agency_obj.record
     end
 
-    def create_google_drive_folder
-      google_drive_adapter = GoogleDrive.new
-      application_root_folder_id = google_drive_adapter.get_dealdrive_folder_info
-      google_drive_adapter.create_folder("Agency_#{record.name}_#{record.id}", application_root_folder_id)
+    def create_s3_folder
+      s3_adapter = S3File.new
+      s3.create_folder(agency_s3_path)
     end
 
     private
@@ -113,6 +113,10 @@ module BusinessLogic
 
     def derive_model(item_type)
       "#{item_type.capitalize}".constantize
+    end
+
+    def agency_s3_path
+      "Agency_#{record.name}_#{record.id}"
     end
 
   end
