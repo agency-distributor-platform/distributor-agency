@@ -17,6 +17,7 @@ module ItemService
       ApplicationRecord.transaction {
         if !(record.persisted?)
           photos = params.delete(:photos)
+          params.delete(:deleted_photos)
           update(params)
           raise "No Agency found" if agency_id.blank?
           item_status_obj = ItemStatusObj.create_obj(self, agency_id)
@@ -24,7 +25,14 @@ module ItemService
           create_folder_structure_in_s3
           upload_photos(photos)
         else
+          photos = params.delete(:photos)
+          deleted_photos = params.delete(:deleted_photos)
+          old_vehicle_root_path = vehicle_root_s3_path
+          copy_objects_to_new_folder(record, params) if params[:registration_id] != record.registration_id
           update(params)
+          new_vehicle_root_s3_path = vehicle_root_s3_path
+          upload_photos(photos) if photos.present?
+          delete_photos(old_vehicle_root_path, new_vehicle_root_s3_path, deleted_photos) if deleted_photos.present?
         end
       }
     end
@@ -64,6 +72,12 @@ module ItemService
       record.vehicle_model
     end
 
+    def derive_new_vehicle_root_s3_path(params)
+      new_registration_id = params[:registration_id]
+      vehicle_model = VehicleModel.find_by(id: params[:vehicle_model_id])
+      "#{agency_s3_root_path}/#{vehicle_model.company_name}/#{vehicle_model.model}/#{new_registration_id}_#{record.id}"
+    end
+
     def vehicle_root_s3_path
       "#{agency_s3_root_path}/#{vehicle_model_record.company_name}/#{vehicle_model_record.model}/#{record.registration_id}_#{record.id}"
     end
@@ -85,6 +99,16 @@ module ItemService
         file_path = photo.tempfile.path
         file_name = photo.original_filename
         s3_adapter.upload_file(file_path, "#{vehicle_photos_path}/#{file_name}")
+      }
+    end
+
+    def copy_objects_to_new_folder(record, params)
+      s3_adapter.copy_object_to_new_folder(vehicle_root_s3_path, derive_new_vehicle_root_s3_path(params))
+    end
+
+    def delete_photos(old_vehicle_root_path, new_vehicle_root_s3_path, photos)
+      photos.each { |photo|
+        s3_adapter.delete_file(photo.sub(old_vehicle_root_path, new_vehicle_root_s3_path))
       }
     end
 
