@@ -1,7 +1,7 @@
 module Constants
-  #add value here
-  VEHICLE_DETAILS_UPLOAD_HEADERS = ["ID Number", "Fin company Name", "Loan / Agrement Number", "Model", "REG NO", "ENGINE NO",	"CHASIS NO",	"Year of Manufacturing",	"Stock entery date", "Dealer / Location", "Buy Price",	"Sale Price",	"Commission", "Due",	"Remark", "Profit / loss"]
+  VEHICLE_DETAILS_UPLOAD_HEADERS = ["Id", "Finance Company Name", "Loan Agreement Number", "Company", "Model", "Reg No", "Engine No", "Chasis No", "Year Of Manufacturing", "Location", "City", "State", "Pincode", "Stock Entery Date", "Buy Price", "Expenses", "Sale Price", "Commission", "Due", "Status", "Remarks"]
   NOT_A_VALID_EXTENSION_MESSAGE = "Not a valid extension"
   FILE_HAS_MORE_THAN_ONE_SHEET_MESSAGE = "The file has more than one sheet"
   NO_RECORDS_FOUND_MESSAGE = "No records found in the sheet"
+  HEADERS_VALIDATION_FAILED = "Headers are not matching with the headers provided in the template"
 end

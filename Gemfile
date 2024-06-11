@@ -21,6 +21,8 @@ gem 'mime-types', '~> 3.1'
 gem 'roo', '~> 2.10'
 gem 'caxlsx'
 
+gem 'activerecord-import'
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 

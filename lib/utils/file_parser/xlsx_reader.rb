@@ -5,11 +5,17 @@ module Utils
     def initialize(file)
       @spreadsheet = Roo::Spreadsheet.open(file)
       @spreadsheet.default_sheet = @spreadsheet.sheets[0]
+      @headers = get_headers
     end
 
-    def validate
+    def basic_validation
       raise Utils::FileParserError.new(Constants::FILE_HAS_MORE_THAN_ONE_SHEET_MESSAGE) if spreadsheet.sheets.length > 1
       raise Utils::FileParserError.new(Constants::NO_RECORDS_FOUND_MESSAGE) if spreadsheet.last_row == 0
+    end
+
+    def headers_validation(expected_headers)
+      are_equal = expected_headers.sort == @headers.sort
+      raise Utils::FileParserError.new(Constants::HEADERS_VALIDATION_FAILED) unless are_equal
     end
 
     def get_headers
@@ -17,8 +23,6 @@ module Utils
     end
 
     def read
-      validate
-      
       records = []
       headers = nil
       spreadsheet.each_row_streaming(pad_cells: true) do |row|
@@ -33,7 +37,16 @@ module Utils
         records << Hash[headers.zip(row)].with_indifferent_access
       end
       
-      return records, headers
+      return records
+    end
+
+    def preprocess_row(row)
+      row.map do |value|
+        value = value.gsub(/^\p{Space}*|\p{Space}*$/, '').strip if value.is_a?(String)
+        value = nil if value.blank?
+
+        value
+      end
     end
 
     def row_count
