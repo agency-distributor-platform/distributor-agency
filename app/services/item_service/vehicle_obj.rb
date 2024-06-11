@@ -1,26 +1,38 @@
-require "#{Rails.root}/lib/adapters/google_drive.rb"
-require "zip"
+# require "#{Rails.root}/lib/adapters/google_drive.rb"
+require "#{Rails.root}/lib/adapters/s3_file.rb"
 
 module ItemService
   class VehicleObj < ItemObj
 
-    attr_accessor :photo_file_path, :photo_file_name
+    attr_accessor :s3_adapter
 
     include Adapters
+
+    def initialize(record)
+      super
+      @s3_adapter = S3File.new
+    end
 
     def create_or_update(params, agency_id=nil)
       ApplicationRecord.transaction {
         if !(record.persisted?)
           photos = params.delete(:photos)
+          params.delete(:deleted_photos)
           update(params)
           raise "No Agency found" if agency_id.blank?
           item_status_obj = ItemStatusObj.create_obj(self, agency_id)
           item_status_obj.set_added_status
-          p record.agency
-          create_folder_structure_in_google_drive
+          create_folder_structure_in_s3
           upload_photos(photos)
         else
+          photos = params.delete(:photos)
+          deleted_photos = params.delete(:deleted_photos)
+          old_vehicle_root_path = vehicle_root_s3_path
+          copy_objects_to_new_folder(record, params) if params[:registration_id] != record.registration_id
           update(params)
+          new_vehicle_root_s3_path = vehicle_root_s3_path
+          upload_photos(photos) if photos.present?
+          delete_photos(old_vehicle_root_path, new_vehicle_root_s3_path, deleted_photos) if deleted_photos.present?
         end
       }
     end
@@ -34,75 +46,70 @@ module ItemService
     end
 
     def get_photos
-      google_drive_adapter = GoogleDrive.new
-      google_drive_folder = record.google_drive_folder_id
-      photos_folder_id = find_folder_id(google_drive_adapter, "photos", google_drive_folder)
-      download_photos(google_drive_adapter, photos_folder_id)
+      files = s3_adapter.list_files(vehicle_photos_path)
+      { files: files.map { |file| {filename: file, publi_url: s3_adapter.public_url(file)} } }
     end
 
     private
 
-    #TO-DO: Cleanup single use variables into directly using them
-    def create_folder_structure_in_google_drive
-      vehicle_model = record.vehicle_model
-      company_name = vehicle_model.company_name
-      model_name = vehicle_model.model
-      agency_record = record.agency
-      agency_folder_name = "Agency_#{agency_record.name}_#{agency_record.id}"
-      google_drive_adapter = GoogleDrive.new
-      dealdrive_folder_id = google_drive_adapter.get_dealdrive_folder_info
-      agency_folder_id = find_folder_id(google_drive_adapter, agency_folder_name, dealdrive_folder_id)
-      company_name_folder_id = find_or_create_if_no_folder(google_drive_adapter, company_name, agency_folder_id)
-      model_folder_id = find_or_create_if_no_folder(google_drive_adapter, model_name, company_name_folder_id)
-      create_vehicle_specific_folders(google_drive_adapter, model_folder_id)
+    def create_folder_structure_in_s3
+      s3_adapter.create_folder_if_not_created(agency_s3_root_path)
+      s3_adapter.create_folder_if_not_created(vehicle_root_s3_path)
+      s3_adapter.create_folder_if_not_created(vehicle_photos_path)
+      s3_adapter.create_folder_if_not_created(vehicle_documents_path)
+      s3_adapter.create_folder_if_not_created(vehicle_other_files_path)
     end
 
-    def find_or_create_if_no_folder(google_drive_adapter, folder, parent_folder_id)
-      existing_folder_id = find_folder_id(google_drive_adapter, folder, parent_folder_id)
-      return create_folder(google_drive_adapter, folder, parent_folder_id)[:id] if existing_folder_id.blank?
-      existing_folder_id
+    def agency_s3_root_path
+      "Agency_#{agency_record.name}_#{agency_record.id}"
     end
 
-    def create_vehicle_specific_folders(google_drive_adapter, model_folder_id)
-      vehicle_root_folder = google_drive_adapter.create_folder("#{record.registration_id}_#{record.id}", model_folder_id)
-      record.google_drive_folder_id = vehicle_root_folder[:id]
-      record.save!
-
-      create_folder(google_drive_adapter, "photos", vehicle_root_folder[:id])
-      create_folder(google_drive_adapter, "documents", vehicle_root_folder[:id])
-      create_folder(google_drive_adapter, "others", vehicle_root_folder[:id])
+    def agency_record
+      record.agency
     end
 
-    def find_folder_id(google_drive_adapter, folder_name, parent_folder_id)
-      google_drive_adapter.find_folder(folder_name, parent_folder_id)[:id]
+    def vehicle_model_record
+      record.vehicle_model
     end
 
-    def create_folder(google_drive_adapter, folder, parent_folder_id)
-      google_drive_adapter.create_folder(folder, parent_folder_id)
+    def derive_new_vehicle_root_s3_path(params)
+      new_registration_id = params[:registration_id]
+      vehicle_model = VehicleModel.find_by(id: params[:vehicle_model_id])
+      "#{agency_s3_root_path}/#{vehicle_model.company_name}/#{vehicle_model.model}/#{new_registration_id}_#{record.id}"
+    end
+
+    def vehicle_root_s3_path
+      "#{agency_s3_root_path}/#{vehicle_model_record.company_name}/#{vehicle_model_record.model}/#{record.registration_id}_#{record.id}"
+    end
+
+    def vehicle_photos_path
+      "#{vehicle_root_s3_path}/photos"
+    end
+
+    def vehicle_documents_path
+      "#{vehicle_root_s3_path}/documents"
+    end
+
+    def vehicle_other_files_path
+      "#{vehicle_root_s3_path}/other"
     end
 
     def upload_photos(photos)
-      google_drive_adapter = GoogleDrive.new
-      vehicle_root_folder_id = record.google_drive_folder_id
-      photo_folder_id = find_folder_id(google_drive_adapter, "photos", vehicle_root_folder_id)
       photos.each { |photo|
-        google_drive_adapter.upload_file(photo, photo_folder_id)
+        file_path = photo.tempfile.path
+        file_name = photo.original_filename
+        s3_adapter.upload_file(file_path, "#{vehicle_photos_path}/#{file_name}")
       }
     end
 
-    def download_photos(google_drive_adapter, photos_folder_id)
-      @photo_file_path = create_zip(google_drive_adapter.download_files(photos_folder_id))
+    def copy_objects_to_new_folder(record, params)
+      s3_adapter.copy_object_to_new_folder(vehicle_root_s3_path, derive_new_vehicle_root_s3_path(params))
     end
 
-    def create_zip(files)
-      @photo_file_name = "google_drive_files_#{Time.now.to_i}.zip"
-      zip_path = Rails.root.join('tmp', photo_file_name)
-      Zip::File.open(zip_path, Zip::File::CREATE) do |zipfile|
-        files.each do |file|
-          zipfile.get_output_stream(file[:name]) { |f| f.write(file[:content]) }
-        end
-      end
-      zip_path
+    def delete_photos(old_vehicle_root_path, new_vehicle_root_s3_path, photos)
+      photos.each { |photo|
+        s3_adapter.delete_file(photo.sub(old_vehicle_root_path, new_vehicle_root_s3_path))
+      }
     end
 
   end

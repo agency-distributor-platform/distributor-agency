@@ -16,6 +16,8 @@ gem 'jwt'
 
 gem 'rubyzip'
 
+gem 'aws-sdk-s3'
+
 gem 'mime-types', '~> 3.1'
 
 gem 'roo', '~> 2.10'

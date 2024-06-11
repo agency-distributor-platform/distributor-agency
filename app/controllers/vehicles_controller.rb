@@ -12,42 +12,15 @@ class VehiclesController < AuthenticationController
     record_id = vehicle_params.delete(:id)
     check_pincode(vehicle_params[:pincode])
     check_state(vehicle_params[:state])
-    sanitised_vehicle_params = vehicle_params
     #TO-DO: Move to a function
-    sanitised_vehicle_params[:photos] = []
-    if sanitised_vehicle_params[:photo1].present?
-      sanitised_vehicle_params[:photos].push(sanitised_vehicle_params[:photo1])
-      sanitised_vehicle_params.delete(:photo1)
-    end
-    if sanitised_vehicle_params[:photo2].present?
-      sanitised_vehicle_params[:photos].push(sanitised_vehicle_params[:photo2])
-      sanitised_vehicle_params.delete(:photo2)
-    end
-    if sanitised_vehicle_params[:photo3].present?
-      sanitised_vehicle_params[:photos].push(sanitised_vehicle_params[:photo3])
-      sanitised_vehicle_params.delete(:photo3)
-    end
-    if sanitised_vehicle_params[:photo4].present?
-      sanitised_vehicle_params[:photos].push(sanitised_vehicle_params[:photo4])
-      sanitised_vehicle_params.delete(:photo4)
-    end
-    if sanitised_vehicle_params[:photo5].present?
-      sanitised_vehicle_params[:photos].push(sanitised_vehicle_params[:photo5])
-      sanitised_vehicle_params.delete(:photo5)
-    end
     vehicle_obj = ItemService::VehicleObj.new({id: record_id})
-    vehicle_obj.create_or_update(sanitised_vehicle_params, agency.record_id)
+    vehicle_obj.create_or_update(vehicle_params, agency.record_id)
     render json: {}
   end
 
   def photos
     vehicle_obj = ItemService::VehicleObj.new({id: params[:vehicle_id]})
-    vehicle_obj.get_photos
-    send_file(
-      vehicle_obj.photo_file_path,
-      filename: vehicle_obj.photo_file_name,
-      type: "application/zip" #MIME::Types.type_for(vehicle_obj.photo_file_path).first.content_type
-    )
+    render json: vehicle_obj.get_photos, status: :ok
   end
 
   def get_vehicles
@@ -127,7 +100,7 @@ class VehiclesController < AuthenticationController
   end
 
   def vehicle_params
-    params.require(:vehicle_details).permit(:id, :registration_id, :chassis_id, :engine_id, :manufacturing_year, :cost_price, :loan_or_agreement_number, :stock_entry_date, :comments, :location, :vehicle_model_id, :city, :state, :pincode, :comments, :photo1, :photo2, :photo3, :photo4, :photo5).to_h.deep_symbolize_keys
+    params.require(:vehicle_details).permit(:id, :registration_id, :chassis_id, :engine_id, :manufacturing_year, :cost_price, :loan_or_agreement_number, :stock_entry_date, :comments, :location, :vehicle_model_id, :city, :state, :pincode, :comments, photos: [], deleted_photos: []).to_h.deep_symbolize_keys
   end
 
   def check_pincode(pincode)
