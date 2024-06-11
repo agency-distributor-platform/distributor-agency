@@ -89,11 +89,6 @@ class VehiclesController < AuthenticationController
 
   private
 
-  def set_agency_obj_only
-    raise "Check user session" if !(employer.present? && session_user_service.is_agency?)
-    @agency = BusinessLogic::AgencyObj.new(employer.as_json.deep_symbolize_keys)
-  end
-
   def set_agency_or_distributor_or_salesperson_obj
     raise "Check user session" if employer.blank?
     @agency = BusinessLogic::AgencyObj.new(employer.as_json.deep_symbolize_keys) if session_user_service.is_agency?
