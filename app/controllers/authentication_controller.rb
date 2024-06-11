@@ -93,6 +93,13 @@ class AuthenticationController < ApplicationController
 
   private
 
+  
+  def set_agency_obj_only
+    raise "Check user session" if !(employer.present? && session_user_service.is_agency?)
+    @agency = BusinessLogic::AgencyObj.new(employer.as_json.deep_symbolize_keys)
+  end
+
+
   def check_token_access
     token = request.headers["Authorization"].split("Bearer ")[1] rescue nil
     raise "User not authenticated" if token.blank?
