@@ -1,5 +1,7 @@
 module UploadService 
   class BulkUpload
+    attr_accessor :agency_id
+
     def download_template
       file = 'vehicle_details_template.xlsx'
       records = [Constants::VEHICLE_DETAILS_UPLOAD_HEADERS]
@@ -8,9 +10,9 @@ module UploadService
       file
     end
 
-    def upload_vehicle_details(params)
+    def upload_vehicle_details(params, agency_id)
       file = params[:file]
-      @agency_id = 2
+      @agency_id = agency_id
       reader = Utils::FileParserFactory.get_parser('xlsx').get_reader(file.path)
       
       reader.basic_validation
@@ -19,7 +21,9 @@ module UploadService
       records = reader.read
 
       prepare_upsert_params(records)
-      
+
+      #to do : replace raw sql with model queries 
+      # to do : refactor code, move upsert methods to new class
       ActiveRecord::Base.transaction do
         prepare_reg_ids_in_conditions
 
@@ -45,7 +49,7 @@ module UploadService
     rescue UploadService::InvalidStatusError => e
       return {
         error: e.message
-      }, 400 
+      }, 422
     rescue Utils::FileParserError => e
       return {
         error: e.message
@@ -53,7 +57,7 @@ module UploadService
     rescue ActiveRecord::RecordNotUnique => e
       return {
         error: "A unique key violation occurred: #{e.message}"
-      }, 400
+      }, 422
     rescue StandardError => e
       return {
         error: "An unexpected error occurred: #{e.message}"
@@ -61,7 +65,8 @@ module UploadService
     end
 
     def prepare_reg_ids_in_conditions
-      @quoted_registration_ids = @vehicles.map { |vehicle|    ActiveRecord::Base.connection.quote(vehicle[:registration_id])}.join(',')
+      @quoted_registration_ids = @vehicles.map { |vehicle| 
+      ActiveRecord::Base.connection.quote(vehicle[:registration_id])}.join(',')
     end 
     
     def upsert_vehicle_models
@@ -201,7 +206,7 @@ module UploadService
         item_type: 'Vehicle',
         registration_id: record["Reg No"],
         status_id: status_id, 
-        agency_id: @agency_id,
+        agency_id: agency_id,
         distributor_share: record["Commission"]
       }
     end 
