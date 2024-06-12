@@ -3,23 +3,23 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
-  post "/register", to: "authentication#register" #done, TO-DO -> create folder for agency in S3
+  post "/register", to: "authentication#register" #done
   post "/login", to: "authentication#login" #done
-  get "/agencies", to: "pre_login#list_agencies" #done
-  get "/distributors", to: "pre_login#list_distributors" #done
-  get "/search_agencies", to: "pre_login#search_agencies" #done
-  get "/search_distributors", to: "pre_login#search_distributors" #done
+  get "/agencies", to: "pre_login#list_agencies" #done, pagination-done
+  get "/distributors", to: "pre_login#list_distributors" #done, pagination-done
+  get "/search_agencies", to: "pre_login#search_agencies" #done, pagination-done
+  get "/search_distributors", to: "pre_login#search_distributors" #done, pagination-done
   get "/search_salespersons", to: "pre_login#search_salespersons" #TO-DO
   patch "/agency/edit", to: "agency#edit" #done #user can only edit it's own agency
 
   post "/vehicle_model/create", to: "vehicle_model#create" #done
   patch "/vehicle_model/:id", to: "vehicle_model#edit" #done
-  get "/vehicle_model/search", to: "vehicle_model#search" #done
+  get "/vehicle_model/search", to: "vehicle_model#search" #done, pagination-done
   get "/vehicle_model/:id", to: "vehicle_model#show" #done
-  get "/vehicle_models", to: "vehicle_model#list" #done
+  get "/vehicle_models", to: "vehicle_model#list" #done, pagination-done
   delete "/vehicle_model/:id", to: "vehicle_model#delete" #done
 
-  get "/agency/distributors", to: "agency#get_distributors" #done
+  get "/agency/distributors", to: "agency#get_distributors" #done, pagination-already
   patch "/distributor/agency_linking", to: "distributor#agency_linking" #done
 
   patch "/distributor/edit", to: "distributor#edit" #done
@@ -31,32 +31,32 @@ Rails.application.routes.draw do
   get "/statuses", to: "item#statuses" #done
   put "/vehicle", to: "vehicles#create_or_edit_vehicle_details" #done
   patch "/vehicle/:vehicle_id/assign_vehicle", to: "vehicles#assign_vehicle" #done
-  get "/vehicles", to: "vehicles#get_vehicles" #done
+  get "/vehicles", to: "vehicles#get_vehicles" #done, pagination-done
   get "/vehicles/:vehicle_id", to: "vehicles#get_vehicle_details" #done
   delete "/vehicle/:vehicle_id", to: "vehicles#delete" #done
   get "/vehicle/:vehicle_id/photos", to: "vehicles#photos"
   put "/vehicles/:transaction_type", to: "vehicles#transact_vehicle" #done #downpayment/partial sales also handled in this api #buyer information maybe created here
   put "/distributor_share", to: "item#add_or_edit_distributor_share" #done
   put "/salesperson_share", to: "item#add_or_edit_salesperson_share" #done
-  get "/vehicles/:vehicle_id/transactions", to: "vehicles#get_vehicle_transactions" #done
+  get "/vehicles/:vehicle_id/transactions", to: "vehicles#get_vehicle_transactions" #done, pagination-need-to-see
   patch "/edit_transaction/:transaction_id", to: "item#edit_transaction" #TO-DO #transaction record, as well as transaction details
 
-  get "/agency/sold_vehicles", to: "agency#get_sold_vehicles" #done
-  get "/distributor/sold_vehicles", to: "distributor#get_sold_vehicles" #done
-  get "/agency/booked_vehicles", to: "agency#get_booked_vehicles" #done
-  get "/distributor/booked_vehicles", to: "distributor#get_booked_vehicles" #done
+  get "/agency/sold_vehicles", to: "agency#get_sold_vehicles" #done, pagination-already
+  get "/distributor/sold_vehicles", to: "distributor#get_sold_vehicles" #done, pagination-done
+  get "/agency/booked_vehicles", to: "agency#get_booked_vehicles" #done, pagination-done
+  get "/distributor/booked_vehicles", to: "distributor#get_booked_vehicles" #done, pagination-done
   get "/salesperson/sold_vehicles", to: "salesperson#get_sold_vehicles" #dev done, to test
   get "/salesperson/booked_vehicles", to: "salesperson#get_booked_vehicles" #dev done, to test
 
 
   get "/total_earnings", to: "item#earnings"
   # get "/vehicle/personal_vehicle_transactions" #-> Bookings and sellings
-  get "/buyers", to: "buyer#get_buyers"
+  get "/buyers", to: "buyer#get_buyers" #pagination
   get "/buyers/:buyer_id", to: "buyer#get_buyer"
   patch "/buyer/:buyer_id/edit", to: "buyer#edit"
   patch "/change_password", to: "authentication#change_password"
 
-  get "/inquiries", to: "inquiry#list"
+  get "/inquiries", to: "inquiry#list" #, pagination-done
   post "/inquiry", to: "inquiry#create"
 
   delete "/logout", to: "authentication#logout"

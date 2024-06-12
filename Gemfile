@@ -25,6 +25,8 @@ gem 'caxlsx'
 
 gem 'activerecord-import'
 
+gem 'will_paginate', '~> 3.3'
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 

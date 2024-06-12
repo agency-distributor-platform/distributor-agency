@@ -32,6 +32,8 @@ class VehiclesController < AuthenticationController
       filter_hash = {item_type: "Vehicle", agency: agency.record}
       filter_hash[:status] = status if status.present?
     end
+    filter_hash[:page] = params[:page]
+    filter_hash[:per_page] = params[:per_page]
     render json: ItemService::ItemStatusObj.get_items(filter_hash)
   end
 
