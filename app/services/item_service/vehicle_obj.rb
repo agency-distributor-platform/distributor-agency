@@ -28,7 +28,7 @@ module ItemService
           photos = params.delete(:photos)
           deleted_photos = params.delete(:deleted_photos)
           old_vehicle_root_path = vehicle_root_s3_path
-          copy_objects_to_new_folder(record, params) if params[:registration_id] != record.registration_id
+          copy_objects_to_new_folder(record, params) if (params[:registration_id] != record.registration_id) || (params[:vehicle_model_id] != record.vehicle_model_id)
           update(params)
           new_vehicle_root_s3_path = vehicle_root_s3_path
           upload_photos(photos) if photos.present?
