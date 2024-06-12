@@ -60,6 +60,12 @@ Rails.application.routes.draw do
   post "/inquiry", to: "inquiry#create"
 
   delete "/logout", to: "authentication#logout"
+  # new routes 
+  #bulk upload template 
+  namespace "bulk" do
+    post "upload/vehicle_details", to: "upload#vehicle_details"
+    get "upload/vehicle_details/template", to: "upload#vehicle_details_template"
+  end
 end
 
 #TO-DO Logout routes
