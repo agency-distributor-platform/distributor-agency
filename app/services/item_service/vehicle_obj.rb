@@ -95,7 +95,7 @@ module ItemService
     end
 
     def upload_photos(photos)
-      prefix = "#{get_photos[:files].length}" rescue ""
+      prefix = "#{DateTime.now}"
       photos.each_with_index { |photo, index|
         file_path = photo.tempfile.path
         file_name = "#{prefix}_photo_#{index}"
