@@ -23,7 +23,7 @@ module ItemService
           item_status_obj = ItemStatusObj.create_obj(self, agency_id)
           item_status_obj.set_added_status
           create_folder_structure_in_s3
-          upload_photos(photos)
+          upload_photos(photos) if photos.present?
         else
           photos = params.delete(:photos)
           deleted_photos = params.delete(:deleted_photos)
@@ -95,9 +95,9 @@ module ItemService
     end
 
     def upload_photos(photos)
-      photos.each { |photo|
+      photos.each_with_index { |photo, index|
         file_path = photo.tempfile.path
-        file_name = photo.original_filename
+        file_name = "photo_#{index}"
         s3_adapter.upload_file(file_path, "#{vehicle_photos_path}/#{file_name}")
       }
     end

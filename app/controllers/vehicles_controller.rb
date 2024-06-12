@@ -83,8 +83,12 @@ class VehiclesController < AuthenticationController
 
   def delete
     vehicle = Vehicle.find_by(id: params[:vehicle_id])
-    vehicle.delete rescue nil
-    render json: {}
+    delete_status = vehicle.delete rescue nil
+    if delete_status.present?
+      render json: {}
+    else
+      render json:{"error" => "Internal Server Error"}, status: 500
+    end
   end
 
   private
