@@ -38,7 +38,7 @@ Rails.application.routes.draw do
   put "/vehicles/:transaction_type", to: "vehicles#transact_vehicle" #done #downpayment/partial sales also handled in this api #buyer information maybe created here
   put "/distributor_share", to: "item#add_or_edit_distributor_share" #done
   put "/salesperson_share", to: "item#add_or_edit_salesperson_share" #done
-  get "/vehicles/:vehicle_id/transactions", to: "vehicles#get_vehicle_transactions" #done, pagination-need-to-see
+  get "/vehicles/:vehicle_id/transactions", to: "vehicles#get_vehicle_transactions" #done, pagination-done
   patch "/edit_transaction/:transaction_id", to: "item#edit_transaction" #TO-DO #transaction record, as well as transaction details
 
   get "/agency/sold_vehicles", to: "agency#get_sold_vehicles" #done, pagination-already
@@ -51,7 +51,7 @@ Rails.application.routes.draw do
 
   get "/total_earnings", to: "item#earnings"
   # get "/vehicle/personal_vehicle_transactions" #-> Bookings and sellings
-  get "/buyers", to: "buyer#get_buyers" #pagination
+  get "/buyers", to: "buyer#get_buyers" #pagination-done
   get "/buyers/:buyer_id", to: "buyer#get_buyer"
   patch "/buyer/:buyer_id/edit", to: "buyer#edit"
   patch "/change_password", to: "authentication#change_password"
