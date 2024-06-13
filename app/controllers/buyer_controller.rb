@@ -2,14 +2,15 @@ require "#{Rails.root}/lib/all_business_logic"
 
 class BuyerController < AuthenticationController
 
+  include Paginatable
   include BusinessLogic
   attr_accessor :buyer
   before_action :set_buyer_obj, only: [:get_buyer, :edit]
 
   def get_buyers
     buyers = []
-    employer.item_statuses.each { |item_status|
-      buyers.push(item_status.buyer.as_json_with_converted_id) if item_status.buyer.present?
+    paginate(employer.buyers).each { |buyer|
+      buyers.push(buyer.as_json_with_converted_id)
     }
     render json: {
       buyers:
