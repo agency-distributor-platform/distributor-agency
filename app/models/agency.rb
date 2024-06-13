@@ -5,6 +5,7 @@ class Agency < EmployerRecord
   has_many :prospect_users, as: :refer_persona
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   has_many :inquiries
+  has_many :buyers, through: :item_statuses
 
   def folder_name
     "Agency_#{agency_record.name}_#{agency_record.id}"

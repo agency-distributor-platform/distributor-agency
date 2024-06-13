@@ -75,7 +75,7 @@ class VehiclesController < AuthenticationController
     vehicle_obj = ItemService::VehicleObj.new({id: params[:vehicle_id]})
     vehicle_item_status_obj = vehicle_obj.item_status_obj
     if verify_session_user_for_item_status(vehicle_item_status_obj)
-      render json: vehicle_item_status_obj.get_transactions, status: 200
+      render json: vehicle_item_status_obj.get_transactions(params[:limit], params[:offset]), status: 200
     else
       render json: {
         "error" => "Forbidden"
