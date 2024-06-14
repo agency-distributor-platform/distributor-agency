@@ -15,6 +15,7 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
   password: Kankroli@e11
+  host: mysqldb
   socket: /tmp/mysql.sock
   wait_timeout: 1000
 

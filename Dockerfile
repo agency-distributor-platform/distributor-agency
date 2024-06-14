@@ -1,8 +1,9 @@
-FROM ruby:2.5.9
-RUN apt-get update && apt-get install -y nodejs
+FROM ruby:3.1.2
+RUN apt-get update
 WORKDIR /app
+RUN gem install bundler
 COPY Gemfile* .
 RUN bundle install
-COPY . .
+COPY . /app
 EXPOSE 3000
 CMD ["rails", "server", "-b", "0.0.0.0"]
