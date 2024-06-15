@@ -1,0 +1,41 @@
+version: '3.7'
+services:
+  mysqldb:
+    image: 'mysql:8.0'
+    container_name: mysqldb
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=distributor_agency_platform_api_prod
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysqldb:/var/lib/mysql
+    networks: 
+      - dealdrive
+
+    #  env_file:
+    #   - ./env/postgres.env # you can also define env variables like this.
+  rails:
+    build: ./
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails server -b '0.0.0.0'"
+    ports:
+      - '3000:3000'
+    networks:
+      - dealdrive
+    stdin_open: true
+    tty: true
+    environment: 
+      RAILS_ENV: 'production'
+    env_file: 
+      - 'C:/Users/Pravesh Nautiyal/local/env_setter.env'
+    volumes:
+      - .:/root/src # add our local code to dockerfile
+    working_dir: /root/src
+    depends_on:
+      - mysqldb  # add all dependant container
+
+volumes:
+  mysqldb: # named volume
+networks: 
+  dealdrive:
