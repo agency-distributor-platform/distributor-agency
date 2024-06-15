@@ -20,7 +20,7 @@ default: &default
 
 development:
   <<: *default
-  database: distributor_agency_platform_api_prod
+  database: distributor_agency_platform_api_dev
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -43,8 +43,9 @@ test:
   # the values provided in this file. Alternatively, you can specify a connection
   # URL environment variable explicitly:
   #
-  production:
-    url: <%= ENV["DATABASE_URL"] %>
+production:
+  <<: *default
+  database: distributor_agency_platform_api_prod
 #
 # Read https://guides.rubyonrails.org/configuring.html#configuring-a-database
 # for a full overview on how database connection configuration can be specified.
