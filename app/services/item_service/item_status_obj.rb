@@ -2,9 +2,9 @@ require "#{Rails.root}/lib/buyer_obj.rb"
 
 module ItemService
   class ItemStatusObj
-
+    
     include BusinessLogic
-
+    extend Utils::Pagination
     attr_reader :record
 
     def self.create_obj(item_obj, agency_id)
@@ -13,7 +13,10 @@ module ItemService
 
     def self.get_items(filter_hash)
       results = []
-      ItemStatus.includes(:status).includes(:distributor).includes(:salesperson).includes(:buyer).where(filter_hash).each { |record|
+      instance = new
+      page, per_page = instance.get_page_and_remove_from_filter(filter_hash)
+      query = ItemStatus.includes(:status).includes(:distributor).includes(:salesperson).includes(:buyer).where(filter_hash)
+      paginate(query, page, per_page).each { |record|
         record_hash = record.as_json
         record_hash["#{record_hash["item_type"]}_details"] = record.item.as_json
         record_hash["salesperson_details"] = record.salesperson.as_json_with_converted_id rescue nil
@@ -30,8 +33,10 @@ module ItemService
       results
     end
 
-    def initialize(record)
-      @record = record[:id] ? ItemStatus.includes(:transactions).find_by(id: record[:id]) : ItemStatus.includes(:transactions).new(record.as_json)
+    def initialize(record=nil)
+      if record.present?
+        @record = record[:id] ? ItemStatus.includes(:transactions).find_by(id: record[:id]) : ItemStatus.includes(:transactions).new(record.as_json)
+      end
     end
 
     def set_added_status
@@ -96,9 +101,11 @@ module ItemService
       record.save!
     end
 
-    def get_transactions
+    def get_transactions(limit, offset)
+      limit ||= 10
+      offset ||= 0
       transactions_list = []
-      record.transactions.order(:id).each { |transaction_record|
+      record.transactions.limit(limit).offset(offset).order(:id).each { |transaction_record|
         transaction_obj = TransactionObj.new(transaction_record)
         transaction_details = transaction_obj.get_transaction_details
         transactions_list.push(transaction_obj.as_json.merge!({transaction_details: }))
@@ -144,8 +151,15 @@ module ItemService
       end
     end
 
-    private
+    def get_page_and_remove_from_filter(filter_hash)
+      page = filter_hash[:page]
+      per_page = filter_hash[:per_page]
+      filter_hash.delete(:page)
+      filter_hash.delete(:per_page)
+      return page, per_page
+    end
 
+    private
     def record_id
       record.id
     end
