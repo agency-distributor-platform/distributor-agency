@@ -27,8 +27,6 @@ services:
     tty: true
     environment: 
       RAILS_ENV: 'production'
-    env_file: 
-      - 'C:/Users/Pravesh Nautiyal/local/env_setter.env'
     volumes:
       - .:/root/src # add our local code to dockerfile
     working_dir: /root/src
