@@ -14,6 +14,11 @@ module ItemService
     def self.get_items(filter_hash)
       results = []
       ItemStatus.includes(:status).includes(:distributor).includes(:salesperson).includes(:buyer).where(filter_hash).each { |record|
+        if record.item_type == "Vehicle"
+          vehicle_obj = ItemService::VehicleObj.new({id: record.item_id})
+          record_hash["vehicle_model_details"] = record.item.vehicle_model.as_json rescue nil
+          record_hash[:photos] = vehicle_obj.get_photos
+        end
         record_hash = record.as_json
         record_hash["#{record_hash["item_type"]}_details"] = record.item.as_json
         record_hash["salesperson_details"] = record.salesperson.as_json_with_converted_id rescue nil
@@ -22,9 +27,8 @@ module ItemService
         record_hash.delete(:status_id)
         record_hash["distributor_details"] = record.distributor.as_json_with_converted_id rescue nil
         record_hash.delete(:distributor_id)
-        #TO-DO -> Make this better, too specific for vehicle
-        record_hash["vehicle_model_details"] = record.item.vehicle_model.as_json rescue nil
         record_hash["buyer_details"] = record.buyer.as_json_with_converted_id rescue nil
+        record_hash["selling_price"] = record.selling_transactions.first.selling_price rescue "N/A"
         results.push(record_hash)
       }
       results
