@@ -2,6 +2,7 @@ module Utils
   module Pagination
     def paginate(scope, page, per_page)
       if page.present?
+        per_page ||= 20
         total_items = scope.all.count 
         paginated_scope = scope.all.paginate(page: page, per_page: per_page)
         total_pages = (total_items.to_f / per_page.to_i).ceil
