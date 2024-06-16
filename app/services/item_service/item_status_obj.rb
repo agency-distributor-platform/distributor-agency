@@ -31,7 +31,7 @@ module ItemService
         record_hash["buyer_details"] = record.buyer.as_json_with_converted_id rescue nil
         results.push(record_hash)
       }
-      results, meta
+      [results, meta]
     end
 
     def initialize(record=nil)
