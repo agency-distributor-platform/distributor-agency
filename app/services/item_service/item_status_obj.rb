@@ -16,7 +16,8 @@ module ItemService
       instance = new
       page, per_page = instance.get_page_and_remove_from_filter(filter_hash)
       query = ItemStatus.includes(:status).includes(:distributor).includes(:salesperson).includes(:buyer).where(filter_hash)
-      paginate(query, page, per_page).each { |record|
+      data, meta = paginate(query, page, per_page)
+      data.each { |record|
         record_hash = record.as_json
         record_hash["#{record_hash["item_type"]}_details"] = record.item.as_json
         record_hash["salesperson_details"] = record.salesperson.as_json_with_converted_id rescue nil
@@ -30,7 +31,7 @@ module ItemService
         record_hash["buyer_details"] = record.buyer.as_json_with_converted_id rescue nil
         results.push(record_hash)
       }
-      results
+      results, meta
     end
 
     def initialize(record=nil)

@@ -41,7 +41,7 @@ Rails.application.routes.draw do
   get "/vehicles/:vehicle_id/transactions", to: "vehicles#get_vehicle_transactions" #done, pagination-done
   patch "/edit_transaction/:transaction_id", to: "item#edit_transaction" #TO-DO #transaction record, as well as transaction details
 
-  get "/agency/sold_vehicles", to: "agency#get_sold_vehicles" #done, pagination-already
+  get "/agency/sold_vehicles", to: "agency#get_sold_vehicles" #done, pagination-already-moved-to-new-pagination
   get "/distributor/sold_vehicles", to: "distributor#get_sold_vehicles" #done, pagination-done
   get "/agency/booked_vehicles", to: "agency#get_booked_vehicles" #done, pagination-done
   get "/distributor/booked_vehicles", to: "distributor#get_booked_vehicles" #done, pagination-done
