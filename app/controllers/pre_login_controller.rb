@@ -1,22 +1,21 @@
 class PreLoginController < ApplicationController
-
-  LIMIT = 25
-  private_constant :LIMIT
+  include Paginatable
 
   def list_agencies
-    agencies = Agency.all.limit(LIMIT).select(:id, :name, :email, :phone).as_json
+    agencies,meta = paginate(Agency.all.select(:id, :name, :email, :phone))
     agencies.each { |agency|
       agency["id"] = convert_id_to_uuid(agency["id"])
     }
-    render json: agencies
+
+    render json: {data: agencies, pageable: meta}
   end
 
   def list_distributors
-    distributors = Distributor.all.limit(LIMIT).select(:id, :name, :email, :phone).as_json
+    distributors,meta = paginate(Distributor.all.select(:id, :name, :email, :phone))
     distributors.each { |distributor|
       distributor["id"] = convert_id_to_uuid(distributor["id"])
     }
-    render json: distributors
+    render json: {data: distributors, pageable: meta}
   end
 
   def search_agencies
@@ -47,9 +46,11 @@ class PreLoginController < ApplicationController
 
   def search_from_db(model, name_query)
     substring_search_query = "%#{name_query}%"
-    model.where("name like :query", query: substring_search_query).select(:id, :name, :phone, :email).as_json.each { |record|
+    records, meta = paginate(model.where("name like :query", query: substring_search_query).select(:id, :name, :phone, :email))
+    records.each { |record|
       record["id"] = convert_id_to_uuid(record["id"])
     }
+    
+    {data: records, pageable: meta}
   end
-
 end

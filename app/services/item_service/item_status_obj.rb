@@ -4,7 +4,7 @@ module ItemService
   class ItemStatusObj
 
     include BusinessLogic
-
+    extend Utils::Pagination
     attr_reader :record
 
     def self.create_obj(item_obj, agency_id)
@@ -13,13 +13,17 @@ module ItemService
 
     def self.get_items(filter_hash)
       results = []
-      ItemStatus.includes(:status).includes(:distributor).includes(:salesperson).includes(:buyer).where(filter_hash).each { |record|
-        if record.item_type == "Vehicle"
-          vehicle_obj = ItemService::VehicleObj.new({id: record.item_id})
-          record_hash["vehicle_model_details"] = record.item.vehicle_model.as_json rescue nil
-          record_hash[:photos] = vehicle_obj.get_photos
-        end
+      instance = new
+      page, per_page = instance.get_page_and_remove_from_filter(filter_hash)
+      query = ItemStatus.includes(:status).includes(:distributor).includes(:salesperson).includes(:buyer).where(filter_hash)
+      data, meta = paginate(query, page, per_page)
+      data.each { |record|
         record_hash = record.as_json
+        if record.item_type == "Vehicle"
+          vehicle_obj = ItemService::VehicleObj.new({id: record.item_id}) rescue nil
+          record_hash["vehicle_model_details"] = record.item.vehicle_model.as_json rescue nil
+          record_hash[:photos] = vehicle_obj.get_photos rescue []
+        end
         record_hash["#{record_hash["item_type"]}_details"] = record.item.as_json
         record_hash["salesperson_details"] = record.salesperson.as_json_with_converted_id rescue nil
         record_hash.delete(:salesperson_id)
@@ -31,11 +35,13 @@ module ItemService
         record_hash["selling_price"] = record.selling_transactions.first.selling_price rescue "N/A"
         results.push(record_hash)
       }
-      results
+      [results, meta]
     end
 
-    def initialize(record)
-      @record = record[:id] ? ItemStatus.includes(:transactions).find_by(id: record[:id]) : ItemStatus.includes(:transactions).new(record.as_json)
+    def initialize(record=nil)
+      if record.present?
+        @record = record[:id] ? ItemStatus.includes(:transactions).find_by(id: record[:id]) : ItemStatus.includes(:transactions).new(record.as_json)
+      end
     end
 
     def set_added_status
@@ -100,14 +106,16 @@ module ItemService
       record.save!
     end
 
-    def get_transactions
+    def get_transactions(page, per_page)
+      per_page ||= 10
       transactions_list = []
-      record.transactions.order(:id).each { |transaction_record|
+      data, meta = paginate(record.transactions.order(:id), page, per_page)
+      data.each { |transaction_record|
         transaction_obj = TransactionObj.new(transaction_record)
         transaction_details = transaction_obj.get_transaction_details
         transactions_list.push(transaction_obj.as_json.merge!({transaction_details: }))
       }
-      transactions_list
+      [transactions_list, meta]
     end
 
     def total_revenue
@@ -148,8 +156,15 @@ module ItemService
       end
     end
 
-    private
+    def get_page_and_remove_from_filter(filter_hash)
+      page = filter_hash[:page]
+      per_page = filter_hash[:per_page]
+      filter_hash.delete(:page)
+      filter_hash.delete(:per_page)
+      return page, per_page
+    end
 
+    private
     def record_id
       record.id
     end

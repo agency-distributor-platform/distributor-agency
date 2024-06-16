@@ -3,6 +3,7 @@ require "#{Rails.root}/lib/all_business_logic"
 class InquiryController < AuthenticationController
 
   include BusinessLogic
+  include Paginatable
   before_action :set_agency_or_distributor_or_salesperson_obj
 
   attr_reader :agency, :distributor, :salesperson
@@ -12,7 +13,8 @@ class InquiryController < AuthenticationController
   end
 
   def list
-    render json: Inquiry.where(agency_id: agency.record_id).as_json, status: :ok
+    data, meta = paginate(Inquiry.where(agency_id: agency.record_id))
+    render json: {data: data, pageable: meta}, status: :ok
   end
 
   private

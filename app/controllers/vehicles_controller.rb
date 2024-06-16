@@ -32,7 +32,10 @@ class VehiclesController < AuthenticationController
       filter_hash = {item_type: "Vehicle", agency: agency.record}
       filter_hash[:status] = status if status.present?
     end
-    render json: ItemService::ItemStatusObj.get_items(filter_hash)
+    filter_hash[:page] = params[:page]
+    filter_hash[:per_page] = params[:per_page]
+    data, meta = ItemService::ItemStatusObj.get_items(filter_hash)
+    render json: {data: data, pageable: meta}
   end
 
   def get_vehicle_details
@@ -73,7 +76,8 @@ class VehiclesController < AuthenticationController
     vehicle_obj = ItemService::VehicleObj.new({id: params[:vehicle_id]})
     vehicle_item_status_obj = vehicle_obj.item_status_obj
     if verify_session_user_for_item_status(vehicle_item_status_obj)
-      render json: vehicle_item_status_obj.get_transactions, status: 200
+      data, meta = vehicle_item_status_obj.get_transactions(params[:page], params[:per_page])
+      render json: {data: data, pageable: meta}, status: 200
     else
       render json: {
         "error" => "Forbidden"
