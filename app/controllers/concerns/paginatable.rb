@@ -3,6 +3,9 @@ module Paginatable
   included do
     def paginate(scope)
       if params[:page].present?
+        page = params[:page]
+        per_page = params[:per_page] 
+        per_page ||= 20
         total_items = scope.count
         paginated_scope = scope.paginate(page: page, per_page: per_page)
         total_pages = (total_items.to_f / per_page.to_i).ceil
