@@ -76,7 +76,7 @@ class VehiclesController < AuthenticationController
     vehicle_obj = ItemService::VehicleObj.new({id: params[:vehicle_id]})
     vehicle_item_status_obj = vehicle_obj.item_status_obj
     if verify_session_user_for_item_status(vehicle_item_status_obj)
-      data, meta = vehicle_item_status_obj.get_transactions(params[:limit], params[:offset])
+      data, meta = vehicle_item_status_obj.get_transactions(params[:page], params[:per_page])
       render json: {data: data, pageable: meta}, status: 200
     else
       render json: {

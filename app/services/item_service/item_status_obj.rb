@@ -102,16 +102,16 @@ module ItemService
       record.save!
     end
 
-    def get_transactions(limit, offset)
-      limit ||= 10
-      offset ||= 0
+    def get_transactions(page, per_page)
+      per_page ||= 10
       transactions_list = []
-      record.transactions.limit(limit).offset(offset).order(:id).each { |transaction_record|
+      data, meta = paginate(record.transactions.order(:id), page, per_page)
+      data.each { |transaction_record|
         transaction_obj = TransactionObj.new(transaction_record)
         transaction_details = transaction_obj.get_transaction_details
         transactions_list.push(transaction_obj.as_json.merge!({transaction_details: }))
       }
-      transactions_list
+      [transactions_list, meta]
     end
 
     def total_revenue

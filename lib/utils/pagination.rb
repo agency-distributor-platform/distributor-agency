@@ -12,7 +12,6 @@ module Utils
           current_page: page,
           per_page: per_page
         }
-        p metadata
         [paginated_scope, metadata]
       else
         [scope.all, {}]
