@@ -18,7 +18,8 @@ class VehicleModelController < AuthenticationController
   end
 
   def list
-    render json: paginate(VehicleModel.all)
+    vehiclde_models, meta = paginate(VehicleModel.all)
+    render json: {data: vehiclde_models, pageable: meta}
   end
 
   def delete
@@ -29,8 +30,9 @@ class VehicleModelController < AuthenticationController
 
   def search
     substring_search_query = "%#{params[:query]}%"
-    name_search = paginate(VehicleModel.where("company_name like :query", query: substring_search_query))
-    model_search = paginate(VehicleModel.where("model like :query", query: substring_search_query))
+    
+    name_search = VehicleModel.where("company_name LIKE :query", query: substring_search_query)
+    model_search = VehicleModel.where("model LIKE :query", query: substring_search_query)
     render json: (name_search + model_search).uniq, status: 200
   end
 

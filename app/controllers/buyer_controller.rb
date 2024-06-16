@@ -9,11 +9,13 @@ class BuyerController < AuthenticationController
 
   def get_buyers
     buyers = []
-    paginate(employer.buyers).each { |buyer|
+    records, meta = paginate(employer.buyers)
+    records.each { |buyer|
       buyers.push(buyer.as_json_with_converted_id)
     }
     render json: {
-      buyers:
+      data: buyers, 
+      pageable: meta
     }, status: :ok
   end
 

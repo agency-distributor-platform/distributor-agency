@@ -44,7 +44,8 @@ class DistributorController < AuthenticationController
     filter_hash = {item_type: "Vehicle", status: , distributor: distributor.record}
     filter_hash[:page] = params[:page]
     filter_hash[:per_page] = params[:per_page]
-    render json: ItemService::ItemStatusObj.get_items(filter_hash)
+    data, meta = ItemService::ItemStatusObj.get_items(filter_hash)
+    render json: {data: data, pageable: meta}
   end
 
   def get_booked_vehicles
@@ -52,7 +53,8 @@ class DistributorController < AuthenticationController
     filter_hash = {item_type: "Vehicle", status: , distributor: distributor.record}
     filter_hash[:page] = params[:page]
     filter_hash[:per_page] = params[:per_page]
-    render json: ItemService::ItemStatusObj.get_items(filter_hash)
+    data, meta = ItemService::ItemStatusObj.get_items(filter_hash)
+    render json: {data: data, pageable: meta}
   end
 
   private

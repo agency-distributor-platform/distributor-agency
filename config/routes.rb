@@ -14,7 +14,7 @@ Rails.application.routes.draw do
 
   post "/vehicle_model/create", to: "vehicle_model#create" #done
   patch "/vehicle_model/:id", to: "vehicle_model#edit" #done
-  get "/vehicle_model/search", to: "vehicle_model#search" #done, pagination-done
+  get "/vehicle_model/search", to: "vehicle_model#search" #done
   get "/vehicle_model/:id", to: "vehicle_model#show" #done
   get "/vehicle_models", to: "vehicle_model#list" #done, pagination-done
   delete "/vehicle_model/:id", to: "vehicle_model#delete" #done
@@ -41,7 +41,7 @@ Rails.application.routes.draw do
   get "/vehicles/:vehicle_id/transactions", to: "vehicles#get_vehicle_transactions" #done, pagination-done
   patch "/edit_transaction/:transaction_id", to: "item#edit_transaction" #TO-DO #transaction record, as well as transaction details
 
-  get "/agency/sold_vehicles", to: "agency#get_sold_vehicles" #done, pagination-already
+  get "/agency/sold_vehicles", to: "agency#get_sold_vehicles" #done, pagination-done
   get "/distributor/sold_vehicles", to: "distributor#get_sold_vehicles" #done, pagination-done
   get "/agency/booked_vehicles", to: "agency#get_booked_vehicles" #done, pagination-done
   get "/distributor/booked_vehicles", to: "distributor#get_booked_vehicles" #done, pagination-done
