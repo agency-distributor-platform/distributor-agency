@@ -33,6 +33,8 @@ module ItemService
         record_hash.delete(:distributor_id)
         record_hash["buyer_details"] = record.buyer.as_json_with_converted_id rescue nil
         record_hash["selling_price"] = record.selling_transactions.first.selling_price rescue "N/A"
+        record_hash["distributor_share"] = record.distributor_share rescue 0
+        record_hash["salesperson_share"] = record.salesperson_share rescue 0
         results.push(record_hash)
       }
       [results, meta]
