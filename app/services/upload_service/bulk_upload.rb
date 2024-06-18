@@ -195,7 +195,8 @@ module UploadService
         stock_entry_date: record["Stock Entery Date"],
         cost_price: record["Buy Price"],
         expenses: record["Expenses"],
-        comments: record["Remarks"]
+        comments: record["Remarks"],
+        kms_driven: record["KMS Driven"]
       }
     end
     
