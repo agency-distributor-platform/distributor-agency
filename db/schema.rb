@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_09_135840) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_18_075016) do
   create_table "agencies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -72,6 +72,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_09_135840) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "agency_id"
+    t.string "name"
+    t.string "email"
+    t.bigint "phone"
     t.index ["agency_id"], name: "fk_rails_6a64f6ed3a"
   end
 
@@ -186,6 +189,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_09_135840) do
     t.string "google_drive_folder_id"
     t.float "expenses"
     t.string "fin_company_name"
+    t.bigint "kms_driven"
     t.index ["chassis_id"], name: "vehicles_unique_chassis_id", unique: true
     t.index ["engine_id"], name: "vehicles_unique_engine_id", unique: true
     t.index ["registration_id"], name: "vehicles_unique_registration_id", unique: true

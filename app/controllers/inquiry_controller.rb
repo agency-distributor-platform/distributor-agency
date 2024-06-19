@@ -30,7 +30,7 @@ class InquiryController < AuthenticationController
   end
 
   def create_params
-    final_params = params.require(:inquiry).permit(:vehicle_model, :starting_price, :ending_price, :comments, :year)
+    final_params = params.require(:inquiry).permit(:name, :email, :phone, :vehicle_model, :starting_price, :ending_price, :comments, :year)
     final_params[:agency_id] = agency.record_id
     final_params
   end
