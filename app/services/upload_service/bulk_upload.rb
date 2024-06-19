@@ -92,6 +92,7 @@ module UploadService
 
     def get_vehicles_id
       reg_ids = @vehicles.map { |record| record[:registration_id] }
+      p reg_ids
       Vehicle.where(registration_id: reg_ids).pluck(:registration_id, :id).to_h
     end
 
