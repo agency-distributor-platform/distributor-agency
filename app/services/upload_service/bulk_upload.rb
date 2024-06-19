@@ -92,7 +92,7 @@ module UploadService
     
     def get_vehicles_id
       reg_ids = @vehicles.map { |record| record[:registration_id] }
-      Vehicle.where(registration_id: reg_ids).pluck(:registration_id, :id).to_h
+      mapping = Vehicle.where(registration_id: reg_ids).pluck(:registration_id, :id).to_h
     end
     
     def update_item_id_in_item_mapping(mapping)
