@@ -60,7 +60,7 @@ module UploadService
       }, 422
     rescue StandardError => e
       return {
-        error: "An unexpected error occurred: #{e.message}"
+        error: "An unexpected error occurred: #{e.message}, #{e.backtrace}"
       }, 500
     end
 
