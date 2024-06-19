@@ -16,7 +16,7 @@ module UploadService
       reader = Utils::FileParserFactory.get_parser('xlsx').get_reader(file.path)
 
       reader.basic_validation
-      # reader.headers_validation(Constants::VEHICLE_DETAILS_UPLOAD_HEADERS)
+      reader.headers_validation(Constants::VEHICLE_DETAILS_UPLOAD_HEADERS)
 
       records = reader.read
 
