@@ -10,7 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_18_075016) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_20_071853) do
+  create_table "add_ons", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.float "amount"
+    t.string "user_name"
+    t.text "description"
+    t.string "garage_name"
+    t.string "location"
+    t.bigint "item_mapping_record_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_mapping_record_id"], name: "fk_rails_266e8dcc10"
+  end
+
   create_table "agencies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -90,6 +102,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_18_075016) do
     t.integer "salesperson_share"
     t.integer "distributor_share"
     t.bigint "status_id"
+    t.float "expenses"
     t.index ["agency_id"], name: "fk_rails_1d6f92d5e5"
     t.index ["buyer_id"], name: "fk_rails_65de868c7a"
     t.index ["distributor_id"], name: "fk_rails_7381df7ff8"
@@ -187,7 +200,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_18_075016) do
     t.string "state"
     t.integer "pincode"
     t.string "google_drive_folder_id"
-    t.float "expenses"
     t.string "fin_company_name"
     t.bigint "kms_driven"
     t.index ["chassis_id"], name: "vehicles_unique_chassis_id", unique: true
@@ -196,6 +208,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_18_075016) do
     t.index ["vehicle_model_id"], name: "fk_rails_83f60c4d50"
   end
 
+  add_foreign_key "add_ons", "item_mapping_records"
   add_foreign_key "booking_transactions", "transactions"
   add_foreign_key "distributors", "agencies"
   add_foreign_key "inquiries", "agencies"
