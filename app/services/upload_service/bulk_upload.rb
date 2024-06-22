@@ -37,6 +37,9 @@ module UploadService
 
         upsert_item_mapping_records
         reg_id_to_item_id = get_item_mapping_id
+        update_add_on_params(reg_id_to_item_id)
+        upsert_add_ons
+        reg_id_to_item_id = get_item_mapping_id
         update_transaction_params(reg_id_to_item_id)
 
         upsert_transactions
@@ -120,6 +123,7 @@ module UploadService
     end
 
     def update_add_on_params(mapping)
+      @add_ons = @add_ons.compact
       @add_ons.each do |add_on|
         add_on[:item_mapping_record_id] = mapping[add_on[:registration_id]]
         add_on.delete(:registration_id)
@@ -131,6 +135,7 @@ module UploadService
     end 
 
     def update_transaction_params(mapping)
+      @transactions = @transactions.compact
       @transactions.each do |transaction|
         transaction[:item_mapping_record_id] = mapping[transaction[:registration_id]]
         transaction.delete(:registration_id)
@@ -155,6 +160,7 @@ module UploadService
     end
 
     def update_sell_transaction_params(mapping)
+      @sell_transactions = @sell_transactions.compact
       @sell_transactions.each do |sell_transaction|
         sell_transaction[:transaction_id] = mapping[sell_transaction[:registration_id]]
         sell_transaction.delete(:registration_id)
@@ -175,12 +181,13 @@ module UploadService
       @statuses = Hash.new
       Status.all.collect{|status| @statuses[status.name] = status.id}
       records.each do |record|
+        vehicle = Vehicle.where(registration_id: record["Reg No"]) if record["Reg No"].present?
         @vehicle_models << transform_vehicle_model_data(record)
         @vehicles << transform_vehicle_data(record)
         @item_mapping_records << transform_item_mapping_data(record)
-        @add_ons << transform_add_ons_data(record) 
-        @transactions << transform_transactions_data(record)
-        @sell_transactions << transform_sell_transactions_data(record)
+        @add_ons << transform_add_ons_data(record, vehicle) 
+        @transactions << transform_transactions_data(record, vehicle)
+        @sell_transactions << transform_sell_transactions_data(record, vehicle)
       end
     end
 
@@ -225,29 +232,35 @@ module UploadService
       }
     end
 
-    def transform_add_ons_data(record)
-      {
-        amount: record["Expenses"],
-        description: "bulk upload",
-        registration_id: record["Reg No"]
-      }
+    def transform_add_ons_data(record, vehicle)
+      unless vehicle.present?
+        {
+          amount: record["Expenses"],
+          description: "bulk upload",
+          registration_id: record["Reg No"]
+        }
+      end
     end
 
-    def transform_transactions_data(record)
-      {
-        transaction_date: Time.current,
-        payment_transaction_id: 'Cash',
-        registration_id: record["Reg No"]
-      }
+    def transform_transactions_data(record, vehicle)
+      unless vehicle.present?
+        {
+          transaction_date: Time.current,
+          payment_transaction_id: 'Cash',
+          registration_id: record["Reg No"]
+        }
+      end
     end
 
-    def transform_sell_transactions_data(record)
-      {
-        selling_price: record["Sale Price"],
-        due_price: record["Due"],
-        selling_persona_type: 'Agency',
-        registration_id: record["Reg No"]
-      }
+    def transform_sell_transactions_data(record, vehicle)
+      unless vehicle.present?
+        {
+          selling_price: record["Sale Price"],
+          due_price: record["Due"],
+          selling_persona_type: 'Agency',
+          registration_id: record["Reg No"]
+        }
+      end
     end
   end
 end
