@@ -119,6 +119,17 @@ module UploadService
       end
     end
 
+    def update_add_on_params(mapping)
+      @add_ons.each do |add_on|
+        add_on[:item_mapping_record_id] = mapping[add_on[:registration_id]]
+        add_on.delete(:registration_id)
+      end
+    end
+
+    def upsert_add_ons
+      AddOn.upsert_all(@add_ons)
+    end 
+
     def update_transaction_params(mapping)
       @transactions.each do |transaction|
         transaction[:item_mapping_record_id] = mapping[transaction[:registration_id]]
@@ -158,6 +169,7 @@ module UploadService
       @vehicles = []
       @vehicle_models = []
       @item_mapping_records = []
+      @add_ons = []
       @transactions = []
       @sell_transactions = []
       @statuses = Hash.new
@@ -166,6 +178,7 @@ module UploadService
         @vehicle_models << transform_vehicle_model_data(record)
         @vehicles << transform_vehicle_data(record)
         @item_mapping_records << transform_item_mapping_data(record)
+        @add_ons << transform_add_ons_data(record) 
         @transactions << transform_transactions_data(record)
         @sell_transactions << transform_sell_transactions_data(record)
       end
@@ -195,7 +208,6 @@ module UploadService
         pincode: record["Pincode"],
         stock_entry_date: record["Stock Entery Date"],
         cost_price: record["Buy Price"],
-        expenses: record["Expenses"],
         comments: record["Remarks"],
         kms_driven: record["KMS Driven"]
       }
@@ -210,6 +222,14 @@ module UploadService
         status_id: status_id,
         agency_id: agency_id,
         distributor_share: record["Commission"]
+      }
+    end
+
+    def transform_add_ons_data(record)
+      {
+        amount: record["Expenses"],
+        description: "bulk upload",
+        registration_id: record["Reg No"]
       }
     end
 
