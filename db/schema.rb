@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_22_085712) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_22_090621) do
   create_table "add_ons", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.float "amount"
     t.string "biller_name"
@@ -106,6 +106,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_22_085712) do
     t.index ["agency_id"], name: "fk_rails_1d6f92d5e5"
     t.index ["buyer_id"], name: "fk_rails_65de868c7a"
     t.index ["distributor_id"], name: "fk_rails_7381df7ff8"
+    t.index ["item_type", "item_id"], name: "index_item_mapping_records_on_item_type_and_item_id", unique: true
     t.index ["status_id"], name: "fk_rails_5a66de9fe6"
   end
 
