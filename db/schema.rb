@@ -10,13 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_20_071853) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_22_085712) do
   create_table "add_ons", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.float "amount"
-    t.string "user_name"
+    t.string "biller_name"
     t.text "description"
-    t.string "garage_name"
-    t.string "location"
+    t.string "biller_location"
+    t.string "biller_phone"
     t.bigint "item_mapping_record_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
