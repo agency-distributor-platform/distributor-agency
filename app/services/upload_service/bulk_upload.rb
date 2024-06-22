@@ -39,7 +39,6 @@ module UploadService
         reg_id_to_item_id = get_item_mapping_id
         update_add_on_params(reg_id_to_item_id)
         upsert_add_ons
-        reg_id_to_item_id = get_item_mapping_id
         update_transaction_params(reg_id_to_item_id)
 
         upsert_transactions
