@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_22_090621) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_23_172108) do
   create_table "add_ons", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.float "amount"
     t.string "biller_name"
