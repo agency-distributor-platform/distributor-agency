@@ -49,6 +49,12 @@ module ItemService
       files = s3_adapter.list_files(vehicle_photos_path)
       { files: files.map { |file| {filename: file, publi_url: s3_adapter.public_url(file)} } }
     end
+    # TO-DO : refactor to use single method to get any type of photos
+    def get_add_on_photos(add_on_id)
+      photos_path = "#{vehicle_other_files_path}/add_ons/#{add_on_id}"
+      files = s3_adapter.list_files(photos_path)
+      { files: files.map { |file| {filename: file, publi_url: s3_adapter.public_url(file)} } }
+    end 
 
     # TO-DO : refactor to use single method tp upload any type of photos
     def upload_add_on_photos(photos, add_on_id)
