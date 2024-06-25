@@ -66,6 +66,8 @@ Rails.application.routes.draw do
     post "upload/vehicle_details", to: "upload#vehicle_details"
     get "upload/vehicle_details/template", to: "upload#vehicle_details_template"
   end
+
+  resources :add_ons
 end
 
 #TO-DO Logout routes
