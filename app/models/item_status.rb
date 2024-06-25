@@ -9,4 +9,5 @@ class ItemStatus < ApplicationRecord
   has_many :selling_transactions, through: :transactions
   has_many :booking_transactions, through: :transactions
   belongs_to :status
+  has_many :add_ons
 end
