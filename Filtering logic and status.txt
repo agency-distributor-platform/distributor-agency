@@ -1,0 +1,20 @@
+Filtering -
+within the filter -> OR
+across filters -> AND
+
+Filters
+(existing feature based on cars24)
+vehicle model (id based, same table) -
+expenses price (range based, item status table)
+manufactoring year of vehicle (range based, same table)
+kms driven (range based, same table)
+
+(remaining features based on cars24)
+Fuel type (petrol, diesel, CNG) (id based, same table)
+Vehicle features (multi value attribute -> one vehicle can have many features -> MxN association join to search/filter)
+body type (id based, same table)
+transmission (value based -> enum column in vehicles table)
+Owners (park it for a long time, need to check how to store and keep trail of previous owners if we are capturing that)
+seats (id based, same table)
+safety rating (id based, same table)
+color (value based -> varchar column in vehicles table)
