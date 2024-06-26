@@ -1,12 +1,17 @@
+require "set"
+require_relative "./../../lib/utils/pagination.rb"
 require "#{Rails.root}/lib/all_business_logic"
+require "#{Rails.root}/lib/utils/filter_hash_to_filter_converter"
 require 'mime/types'
 
 class VehiclesController < AuthenticationController
 
   include BusinessLogic
+  include Utils
+  include Utils::Pagination
   attr_reader :agency, :distributor, :salesperson, :item_obj
   before_action :set_agency_obj_only, only: [:create_or_edit_vehicle_details, :assign_vehicle]
-  before_action :set_agency_or_distributor_or_salesperson_obj, only: [:get_vehicles, :get_vehicle_details, :transact_vehicle, :get_transaction_details, :get_vehicle_transactions]
+  before_action :set_agency_or_distributor_or_salesperson_obj, only: [:get_vehicles, :get_vehicle_details, :transact_vehicle, :get_transaction_details, :get_vehicle_transactions, :filter_results]
 
   def create_or_edit_vehicle_details
     record_id = vehicle_params.delete(:id)
@@ -95,6 +100,32 @@ class VehiclesController < AuthenticationController
     end
   end
 
+  def filter_results
+    filter_hash = filter_params[:filters]
+    filter_objs = Utils::FilterHashToFilterConverter.convert(filter_hash, Vehicle, {
+      expenses: :item_status
+    })
+
+    records = nil
+    filter_objs.each_with_index { |filter_obj, index|
+      filter_records = filter_obj.apply_filter
+      records = records.nil? ? Set.new(filter_records) : records & Set.new(filter_records)
+    }
+
+    item_status_records = []
+    records.to_a.each { |record|
+      item_status_record = record.item_status
+      item_status_records.push(ItemService::ItemStatusObj.get_item_hash(item_status_record))
+    }
+
+    data, pageable = non_query_paginate(item_status_records, params[:page] || 1, params[:per_page] || 15)
+
+    render json: {
+      data: ,
+      pageable:
+    }
+  end
+
   private
 
   def set_agency_or_distributor_or_salesperson_obj
@@ -154,6 +185,10 @@ class VehiclesController < AuthenticationController
 
   def verify_session_user_for_item_status(item_status_obj)
     (session_user_service.is_agency? && item_status_obj.agency.eql?(agency)) || (session_user_service.is_distributor? && item_status_obj.distributor.eql?(distributor)) || (session_user_service.is_salesperson? && item_status_obj.salesperson.record == salesperson.record)
+  end
+
+  def filter_params
+    params.require(:vehicles).permit(filters: {}).to_h.deep_symbolize_keys
   end
 
 end
