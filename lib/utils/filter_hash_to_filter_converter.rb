@@ -23,7 +23,7 @@ module Utils
               column: key,
               range: values
             }
-            filters.push(Filters::JoinRangeFilter.new(model, [association_mapping_for_associated_range_columns[key]], filter_values))
+            filters.push(Filters::JoinRangeFilter.new(model, association_mapping_for_associated_range_columns[key], filter_values))
           else
             filters.push(Filters::JoinIdFilter.new(model, key, values))
           end

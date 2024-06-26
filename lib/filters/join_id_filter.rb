@@ -9,7 +9,7 @@ module Filters
     end
 
     def apply_filter
-      model.includes(association.to_sym).where("#{assocaition}": {"id": values})
+      model.includes(association.to_sym).where("#{association}": {"id": values})
     end
 
   end

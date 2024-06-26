@@ -7,9 +7,9 @@ module Filters
 
     attr_reader :associated_model
 
-    def initialize(model, associations, values={})
+    def initialize(model, association, values={})
       super(model, values)
-      @association = associations.first
+      @association = association
     end
 
     def apply_filter
