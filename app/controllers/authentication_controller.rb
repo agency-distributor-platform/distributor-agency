@@ -53,7 +53,6 @@ class AuthenticationController < ApplicationController
             state: user_type_details[:state],
             pincode: user_type_details[:pincode]
           })
-          BusinessLogic::AgencyObj.new(user_type_record).create_s3_folder if user_type_model == Agency
           user_type_id = user_type_record.id
           user_type_record.create_super_user if user_type_details[:email] != user_params[:email]
         end
