@@ -53,7 +53,6 @@ class AuthenticationController < ApplicationController
             state: user_type_details[:state],
             pincode: user_type_details[:pincode]
           })
-          BusinessLogic::AgencyObj.new(user_type_record).create_google_drive_folder if user_type_model == Agency
           user_type_id = user_type_record.id
           user_type_record.create_super_user if user_type_details[:email] != user_params[:email]
         end
@@ -93,7 +92,7 @@ class AuthenticationController < ApplicationController
 
   private
 
-  
+
   def set_agency_obj_only
     raise "Check user session" if !(employer.present? && session_user_service.is_agency?)
     @agency = BusinessLogic::AgencyObj.new(employer.as_json.deep_symbolize_keys)
