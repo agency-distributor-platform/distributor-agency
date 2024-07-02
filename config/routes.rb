@@ -66,9 +66,16 @@ Rails.application.routes.draw do
     post "upload/vehicle_details", to: "upload#vehicle_details"
     get "upload/vehicle_details/template", to: "upload#vehicle_details_template"
   end
+<<<<<<< Updated upstream
 
   resources :add_ons
   post "/vehicles/filter", to: "vehicles#filter_results"
+=======
+  #testing
+  get "/test", to: "test#hello" 
+>>>>>>> Stashed changes
 end
+
+
 
 #TO-DO Logout routes
