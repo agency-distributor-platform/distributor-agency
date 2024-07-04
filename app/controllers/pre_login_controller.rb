@@ -19,27 +19,15 @@ class PreLoginController < ApplicationController
   end
 
   def search_agencies
-    if params[:q].present?
       render json: search_from_db(Agency, params[:q]), status: 200
-    else
-      render json: [], status: 200
-    end
   end
 
   def search_distributors
-    if params[:q].present?
       render json: search_from_db(Distributor, params[:q]), status: 200
-    else
-      render json: [], status: 200
-    end
   end
 
   def search_salespersons
-    if params[:q].present?
       render json: search_from_db(Salesperson, params[:q]), status: 200
-    else
-      render json: [], status: 200
-    end
   end
 
   private
@@ -50,7 +38,7 @@ class PreLoginController < ApplicationController
     records.each { |record|
       record["id"] = convert_id_to_uuid(record["id"])
     }
-    
+
     {data: records, pageable: meta}
   end
 end
