@@ -11,11 +11,11 @@ module ItemService
       new(ItemStatus.new({item_type: item_obj.model_name, item_id: item_obj.record_id, agency_id: }))
     end
 
-    def self.get_items(filter_hash)
+    def self.get_items(filter_hash, id_ordering_type="ASC")
       results = []
       instance = new
       page, per_page = instance.get_page_and_remove_from_filter(filter_hash)
-      query = ItemStatus.includes(:status).includes(:distributor).includes(:salesperson).includes(:buyer).where(filter_hash)
+      query = ItemStatus.includes(:status).includes(:distributor).includes(:salesperson).includes(:buyer).where(filter_hash).order("id #{id_ordering_type}").desc
       data, meta = paginate(query, page, per_page)
       data.each { |record|
         results.push(get_item_hash(record))

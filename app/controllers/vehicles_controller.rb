@@ -39,7 +39,7 @@ class VehiclesController < AuthenticationController
     end
     filter_hash[:page] = params[:page]
     filter_hash[:per_page] = params[:per_page]
-    data, meta = ItemService::ItemStatusObj.get_items(filter_hash)
+    data, meta = ItemService::ItemStatusObj.get_items(filter_hash, "DESC")
     render json: {data: data, pageable: meta}
   end
 
