@@ -1,8 +1,8 @@
 class AddOn < ApplicationRecord
   belongs_to :item_status, class_name: "ItemStatus", foreign_key: "item_mapping_record_id"
-  after_create :update_expense
-  after_update :update_expense
-  after_destroy :update_expense
+  # after_create :update_expense
+  # after_update :update_expense
+  # after_destroy :update_expense
 
   private
 
