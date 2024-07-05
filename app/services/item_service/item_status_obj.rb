@@ -15,7 +15,7 @@ module ItemService
       results = []
       instance = new
       page, per_page = instance.get_page_and_remove_from_filter(filter_hash)
-      query = ItemStatus.includes(:status).includes(:distributor).includes(:salesperson).includes(:buyer).where(filter_hash).order("id #{id_ordering_type}").desc
+      query = ItemStatus.includes(:status).includes(:distributor).includes(:salesperson).includes(:buyer).where(filter_hash).order("id #{id_ordering_type}")
       data, meta = paginate(query, page, per_page)
       data.each { |record|
         results.push(get_item_hash(record))
