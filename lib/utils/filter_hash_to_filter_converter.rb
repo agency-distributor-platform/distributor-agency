@@ -10,7 +10,7 @@ module Utils
       filter_hash.each { |key, values|
         if model.columns_hash.keys.include?(key.to_s)
           column_datatype = get_column_type(model, key)
-          if column_datatype == "bigint"
+          if column_datatype == "bigint" && key.to_s != "kms_driven"
             filters.push(IdFilter.new(model, key, values))
           elsif column_datatype == "varchar"
             filters.push(ValueFilter.new(model, key, values))
