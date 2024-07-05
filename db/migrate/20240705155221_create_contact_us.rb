@@ -14,7 +14,9 @@ class CreateContactUs < ActiveRecord::Migration[7.0]
     end
 
     def down
-      delete_table TABLE_NAME
+      if table_exists?(TABLE_NAME)
+        delete_table TABLE_NAME
+      end
     end
   end
 end
