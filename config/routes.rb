@@ -71,6 +71,7 @@ Rails.application.routes.draw do
   post "/vehicles/filter", to: "vehicles#filter_results"
   #testing
   get "/test", to: "test#hello" 
+  resources :contact_us
 end
 
 
