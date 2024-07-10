@@ -34,7 +34,7 @@ class PreLoginController < ApplicationController
 
   def search_from_db(model, name_query)
     substring_search_query = "%#{name_query}%"
-    records, meta = paginate(model.where("name like :query", query: substring_search_query).select(:id, :name, :phone, :email))
+    records, meta = paginate(model.where("name like :query or email like :query", query: substring_search_query).select(:id, :name, :phone, :email))
     records.each { |record|
       record["id"] = convert_id_to_uuid(record["id"])
     }
