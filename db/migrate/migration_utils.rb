@@ -63,6 +63,13 @@ module MigrationUtils
     SQL
   end
 
+  
+  def add_enum_column_with_verification(table_name, column_name, enum_values, default=nil)
+    if table_exists? table_name
+      add_column table_name, column_name , "ENUM(#{enum_values.map { |value| "'#{value}'" }.join(',')})", default: default
+    end
+  end
+
   def delete_table(table)
     drop_table table if table_exists? table
   end
