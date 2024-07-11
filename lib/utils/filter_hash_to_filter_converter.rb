@@ -40,6 +40,7 @@ module Utils
       column = model.columns.find { |c| c.name == column_name.to_s }
       return 'Column not found' unless column
       enum_type_regex = /^enum\(.+\)$/
+      var_char_regex = /^varchar\(.+\)$/
 
       case column.sql_type
       when 'bigint'
@@ -49,6 +50,8 @@ module Utils
       when 'integer'
         'integer'
       when 'varchar'
+        'varchar'
+      when var_char_regex
         'varchar'
       when enum_type_regex
         'enum'
