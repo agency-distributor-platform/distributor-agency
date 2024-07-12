@@ -14,6 +14,8 @@ module Utils
             filters.push(IdFilter.new(model, key, values))
           elsif column_datatype == "varchar"
             filters.push(ValueFilter.new(model, key, values))
+          elsif column_datatype == "enum"
+            filters.push(ValueFilter.new(model, key, values))
           else
             filters.push(RangeFilter.new(model, key, values))
           end
@@ -37,6 +39,8 @@ module Utils
     def self.get_column_type(model, column_name)
       column = model.columns.find { |c| c.name == column_name.to_s }
       return 'Column not found' unless column
+      enum_type_regex = /^enum\(.+\)$/
+      var_char_regex = /^varchar\(.+\)$/
 
       case column.sql_type
       when 'bigint'
@@ -47,6 +51,10 @@ module Utils
         'integer'
       when 'varchar'
         'varchar'
+      when var_char_regex
+        'varchar'
+      when enum_type_regex
+        'enum'
       else
         column.sql_type
       end
