@@ -52,6 +52,10 @@ module UploadService
       return {
         error: e.message
       }, 422
+    rescue UploadService::InvalidVehicleCategoryError => e
+      return {
+        error: e.message
+      }, 422
     rescue Utils::FileParserError => e
       return {
         error: e.message
@@ -196,6 +200,8 @@ module UploadService
     end
 
     def transform_vehicle_data(record)
+      invalid_type_message = "Invalid Vehicle Type - #{record["Vehicle Type"]}, It should be one of these #{Constants::VEHICLE_TYPES}"
+      raise UploadService::InvalidVehicleCategoryError.new(invalid_type_message) unless Constants::VEHICLE_TYPES.include?(record["Vehicle Type"]) 
       city = record["City"].titlecase if record["City"].present?
       state = record["State"].titlecase if record["State"].present?
       {
@@ -213,7 +219,8 @@ module UploadService
         stock_entry_date: record["Stock Entery Date"],
         cost_price: record["Buy Price"],
         comments: record["Remarks"],
-        kms_driven: record["KMS Driven"]
+        kms_driven: record["KMS Driven"],
+        category: record["Vehicle Type"]
       }
     end
 
