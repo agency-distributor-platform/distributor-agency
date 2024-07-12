@@ -112,8 +112,9 @@ class VehiclesController < AuthenticationController
       records = records.nil? ? Set.new(filter_records) : records & Set.new(filter_records)
     }
 
+    ordered_records = records.sort_by { |record| -record.id }
     item_status_records = []
-    records.to_a.each { |record|
+    ordered_records.to_a.each { |record|
       item_status_record = record.item_status
       item_status_records.push(ItemService::ItemStatusObj.get_item_hash(item_status_record))
     }
