@@ -112,8 +112,9 @@ class VehiclesController < AuthenticationController
       records = records.nil? ? Set.new(filter_records) : records & Set.new(filter_records)
     }
 
+    ordered_records = records.sort_by { |record| -record.id }
     item_status_records = []
-    records.to_a.each { |record|
+    ordered_records.to_a.each { |record|
       item_status_record = record.item_status
       item_status_records.push(ItemService::ItemStatusObj.get_item_hash(item_status_record))
     }
@@ -139,7 +140,7 @@ class VehiclesController < AuthenticationController
   end
 
   def vehicle_params
-    params.require(:vehicle_details).permit(:id, :registration_id, :chassis_id, :engine_id, :manufacturing_year, :cost_price, :loan_or_agreement_number, :stock_entry_date, :comments, :location, :vehicle_model_id, :city, :state, :pincode, :comments, :kms_driven, photos: [], deleted_photos: []).to_h.deep_symbolize_keys
+    params.require(:vehicle_details).permit(:id, :registration_id, :chassis_id, :engine_id, :manufacturing_year, :cost_price, :loan_or_agreement_number, :stock_entry_date, :comments, :location, :vehicle_model_id, :city, :state, :pincode, :comments, :kms_driven, :category, photos: [], deleted_photos: []).to_h.deep_symbolize_keys
   end
 
   def check_pincode(pincode)

@@ -15,12 +15,12 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
   password: root
-  host: mysqldb
+  host: mysql8-test
   wait_timeout: 1000
 
 development:
   <<: *default
-  database: distributor_agency_platform_api_dev
+  database: distributor_agency_platform_api_development
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".

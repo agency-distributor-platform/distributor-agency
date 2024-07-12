@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_26_124605) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_11_085553) do
   create_table "add_ons", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.float "amount"
     t.string "biller_name"
@@ -57,6 +57,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_26_124605) do
     t.string "pan"
     t.string "father_name"
     t.string "mother_name"
+  end
+
+  create_table "contact_us", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "email"
+    t.bigint "phone"
+    t.text "message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "distributors", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -203,6 +212,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_26_124605) do
     t.string "google_drive_folder_id"
     t.string "fin_company_name"
     t.bigint "kms_driven"
+    t.column "category", "enum('2 Wheeler','3 Wheeler','4 Wheeler','Farm Equipment','Commerical')"
     t.index ["chassis_id"], name: "vehicles_unique_chassis_id", unique: true
     t.index ["engine_id"], name: "vehicles_unique_engine_id", unique: true
     t.index ["registration_id"], name: "vehicles_unique_registration_id", unique: true
