@@ -58,6 +58,7 @@ Rails.application.routes.draw do
 
   get "/inquiries", to: "inquiry#list" #, pagination-done
   post "/inquiry", to: "inquiry#create"
+  post "/refer", to: "salesperson#create_referral"
 
   delete "/logout", to: "authentication#logout"
   # new routes
@@ -70,7 +71,7 @@ Rails.application.routes.draw do
   resources :add_ons
   post "/vehicles/filter", to: "vehicles#filter_results"
   #testing
-  get "/test", to: "test#hello" 
+  get "/test", to: "test#hello"
   resources :contact_us
 end
 

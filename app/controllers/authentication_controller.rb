@@ -37,6 +37,8 @@ class AuthenticationController < ApplicationController
 
   def register
     begin
+      government_document = user_params[:government_document]
+      government_document_identification = user_params[:government_id]
       user_type_model = user_type_details[:type].constantize
       user_type_id = user_type_details[:id]
       user = nil
@@ -53,6 +55,10 @@ class AuthenticationController < ApplicationController
             state: user_type_details[:state],
             pincode: user_type_details[:pincode]
           })
+          user_type_record.update!({
+            government_document:,
+            government_document_identification:
+          }) if user_type_model == Salesperson
           user_type_id = user_type_record.id
           user_type_record.create_super_user if user_type_details[:email] != user_params[:email]
         end
