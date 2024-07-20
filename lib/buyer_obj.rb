@@ -19,5 +19,19 @@ module BusinessLogic
       record.as_json_with_converted_id
     end
 
+    def referred_by
+      aadhar_no = record.addhar
+      if aadhar_no.present?
+        Referral.find_by({buyer_government_document: "Aadhar", buyer_government_document_identification: aadhar_no}).salesperson
+      end
+
+      pan = record.pan
+      if pan.present?
+        Referral.find_by({buyer_government_document: "PAN", buyer_government_document_identification: pan_no}).salesperson
+      end
+
+      nil
+    end
+
   end
 end
