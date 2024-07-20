@@ -9,6 +9,7 @@ class SalespersonController < AuthenticationController
   def edit
     raise "False Pincode Format" if edit_params[:pincode].present? && is_false_pincode?(edit_params[:pincode])
     raise "False state value" if edit_params[:state].present? && is_false_state_or_ut?(edit_params[:state])
+    #TO-DO: Check details using of edit params using KYC verification
     salesperson.update(edit_params)
     render json: salesperson.as_json, status: 200
   end
@@ -36,7 +37,7 @@ class SalespersonController < AuthenticationController
   end
 
   def edit_params
-    params.require(:salesperson_details).permit(:name, :email, :phone, :address, :city, :state, :pincode)
+    params.require(:salesperson_details).permit(:name, :email, :phone, :address, :city, :state, :pincode, :government_document, :government_document_identification)
   end
 
   def set_salesperson_obj
@@ -47,7 +48,8 @@ class SalespersonController < AuthenticationController
   end
 
   def check_if_verified
-    salesperson.is_verified? ? nil : raise "Not Authenticated"
+    not_verified_error_message = salesperson.is_verified? ? nil : "Not Verified"
+    raise not_verified_error_message if not_verified_error_message.present?
   end
 
 end

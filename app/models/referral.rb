@@ -1,3 +1,3 @@
 class Referral < ApplicationRecord
-  belong_to :salesperson
+  belongs_to :salesperson
 end
