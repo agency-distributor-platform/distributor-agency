@@ -65,6 +65,15 @@ module ItemService
       }
     end
 
+    def upload_file(local_file_path, filename)
+      s3_adapter.upload_file(local_file_path, "#{vehicle_documents_path}/#{filename}")
+    end
+
+    def download_file(filename, local_path)
+      s3_file_path = "#{vehicle_documents_path}/#{filename}"
+      s3_adapter.download(s3_file_path, local_path)
+    end
+
     def delete_add_on_photos(photos) 
       delete_photos({old_vehicle_root_path: vehicle_root_s3_path, new_vehicle_root_s3_path: vehicle_root_s3_path, photos: })
     end
