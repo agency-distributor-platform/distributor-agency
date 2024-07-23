@@ -22,12 +22,14 @@ module BusinessLogic
     def referred_by
       aadhar_no = record.addhar
       if aadhar_no.present?
-        Referral.find_by({buyer_government_document: "Aadhar", buyer_government_document_identification: aadhar_no}).salesperson
+        referal = Referral.find_by({buyer_government_document: "Aadhar", buyer_government_document_identification: aadhar_no})
+        referal.salesperson if referal.present? 
       end
 
       pan = record.pan
       if pan.present?
-        Referral.find_by({buyer_government_document: "PAN", buyer_government_document_identification: pan_no}).salesperson
+        referal = Referral.find_by({buyer_government_document: "PAN", buyer_government_document_identification: pan})
+        referal.salesperson if referal.present? 
       end
 
       nil
