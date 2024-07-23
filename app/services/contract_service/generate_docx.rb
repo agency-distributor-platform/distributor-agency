@@ -58,7 +58,7 @@ module ContractService
     end
 
     def upload_contract_to_s3
-      @vehicle_obj.upload_file(@docx_output_path, @output_file)
+      @vehicle_obj.upload_document_file(@docx_output_path, @output_file)
     end
   end
 end
