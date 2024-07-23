@@ -64,5 +64,10 @@ module Adapters
       bucket.objects(prefix: "#{folder_name}/").limit(1).any?
     end
 
+    def download(s3_file_path, local_file_path)
+      object = bucket.object(s3_file_path)
+      object.download_file(local_file_path)
+    end
+
   end
 end
