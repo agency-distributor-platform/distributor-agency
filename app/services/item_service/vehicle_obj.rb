@@ -65,11 +65,11 @@ module ItemService
       }
     end
 
-    def upload_file(local_file_path, filename)
+    def upload_document_file(local_file_path, filename)
       s3_adapter.upload_file(local_file_path, "#{vehicle_documents_path}/#{filename}")
     end
 
-    def download_file(filename, local_path)
+    def download_document_file(filename, local_path)
       s3_file_path = "#{vehicle_documents_path}/#{filename}"
       s3_adapter.download(s3_file_path, local_path)
     end
