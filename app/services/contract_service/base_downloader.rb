@@ -20,7 +20,7 @@ module ContractService
     
     def download_file
       @local_path = "/tmp/#{File.basename(@filename)}"
-      @vehicle_obj.download_file(@filename, @local_path)
+      @vehicle_obj.download_document_file(@filename, @local_path)
     end
 
     def process_file
