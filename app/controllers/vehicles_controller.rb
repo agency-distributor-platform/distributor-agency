@@ -74,7 +74,7 @@ class VehiclesController < AuthenticationController
       transaction_type: ,
       transaction_type_details: transaction_type_params
     })
-    render json:{}, status: 204
+    render json:{message: 'success'}, status: 204
   end
 
   def get_vehicle_transactions
