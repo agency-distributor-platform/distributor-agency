@@ -123,7 +123,7 @@ module ItemService
     end
 
     def vehicle_buyer_photo_path
-      "#{vehicle_root_s3_path}/buyer_photos"
+      "#{vehicle_other_files_path}/buyer_photos"
     end 
 
     def vehicle_other_files_path
