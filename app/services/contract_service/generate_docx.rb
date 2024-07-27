@@ -38,8 +38,8 @@ module ContractService
 
       text_keys_array = %w[
         seller_title seller_name seller_address seller_age buyer_title buyer_name buyer_address
-        buyer_age buyer_document_type buyer_document_no vehicle_type
-        registration_no engine_no chasis_no manufacturing_year selling_price
+        buyer_age buyer_adhar_no vehicle_type vehicle_model
+        registration_id engine_no chasis_no manufacturing_year selling_price
         witness_1_title witness_1_name witness_1_address 
         witness_2_title witness_2_name witness_2_address
       ]

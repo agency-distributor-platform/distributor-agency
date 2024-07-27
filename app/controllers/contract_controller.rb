@@ -40,6 +40,7 @@ class ContractController < AuthenticationController
       :buyer_age,
       :buyer_adhar_no,
       :vehicle_type,
+      :vehicle_model,
       :registration_no,
       :engine_no,
       :chasis_no,
