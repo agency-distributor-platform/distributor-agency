@@ -34,7 +34,7 @@ module ItemService
           end
         else
           booking_price = previous_booking_transaction.present? ? previous_booking_transaction.get_prices[:booking_price] : 0
-          due_price = selling_price - (paid_amount + booking_price)
+          due_price = selling_price.to_i - (paid_amount.to_i + booking_price.to_i)
         end
         raise "Paid amount exceeds selling price" if due_price < 0
         create_record(selling_price, due_price)

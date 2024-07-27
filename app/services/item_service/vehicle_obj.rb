@@ -78,6 +78,10 @@ module ItemService
       delete_photos({old_vehicle_root_path: vehicle_root_s3_path, new_vehicle_root_s3_path: vehicle_root_s3_path, photos: })
     end
 
+    def upload_buyer_photo(photo_path, photo_name)
+      s3_adapter.upload_file(photo_path, "#{vehicle_buyer_photo_path}/#{photo_name}")
+    end
+
     private
 
     def create_folder_structure_in_s3
@@ -117,6 +121,10 @@ module ItemService
     def vehicle_documents_path
       "#{vehicle_root_s3_path}/documents"
     end
+
+    def vehicle_buyer_photo_path
+      "#{vehicle_root_s3_path}/buyer_photos"
+    end 
 
     def vehicle_other_files_path
       "#{vehicle_root_s3_path}/other"

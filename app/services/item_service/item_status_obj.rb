@@ -88,7 +88,7 @@ module ItemService
 
     def add_buyer(buyer_details)
       buyer_obj = BusinessLogic::BuyerObj.new({id: buyer_details[:id]})
-      buyer_obj.create_or_update(buyer_details)
+      buyer_obj.create_or_update(buyer_details, record.item_id)
       record.buyer = buyer_obj.record
       record.salesperson = buyer_obj.referred_by
       record.save!
