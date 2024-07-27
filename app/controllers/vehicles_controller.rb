@@ -161,7 +161,7 @@ class VehiclesController < AuthenticationController
   end
 
   def buyer_params
-    params.require(:buyer_details).permit(:id, :name, :user_metadata, :address, :city, :state, :pincode, :aadhar, :pan, :father_name, :mother_name)
+    params.require(:buyer_details).permit(:id, :name, :user_metadata, :address, :city, :state, :pincode, :aadhar, :pan, :father_name, :mother_name, :phone)
   end
 
   def transaction_params
