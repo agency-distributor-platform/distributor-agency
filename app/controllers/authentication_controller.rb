@@ -37,8 +37,8 @@ class AuthenticationController < ApplicationController
 
   def register
     begin
-      government_document = user_params[:government_document]
-      government_document_identification = user_params[:government_id]
+      government_document = user_govenrment_params[:government_document]
+      government_document_identification = user_govenrment_params[:government_id]
       user_type_model = user_type_details[:type].constantize
       user_type_id = user_type_details[:id]
       user = nil
@@ -142,6 +142,10 @@ class AuthenticationController < ApplicationController
 
   def user_params
     params.require(:user_details).permit(:email, :name, :phone, :password)
+  end
+
+  def user_govenrment_params
+    params.require(:user_details).permit(:government_document, :government_id)
   end
 
   def user_type_details
