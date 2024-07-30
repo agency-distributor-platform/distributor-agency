@@ -47,6 +47,8 @@ Rails.application.routes.draw do
   get "/distributor/booked_vehicles", to: "distributor#get_booked_vehicles" #done, pagination-done
   get "/salesperson/sold_vehicles", to: "salesperson#get_sold_vehicles" #dev done, to test
   get "/salesperson/booked_vehicles", to: "salesperson#get_booked_vehicles" #dev done, to test
+  get "/salesperson/linked_agencies_vehicles", to: "salesperson#linked_agencies_vehicles"
+  get "/salesperson/linked_agencies", to: "salesperson#linked_agencies"
 
 
   get "/total_earnings", to: "item#earnings"
