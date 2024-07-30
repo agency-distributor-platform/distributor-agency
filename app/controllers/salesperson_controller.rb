@@ -30,6 +30,11 @@ class SalespersonController < AuthenticationController
     salesperson.create_referral(government_id_detail_params)
   end
 
+  def raise_salesperson_linking_request
+    salesperson.raise_linking_request(convert_uuid_to_id(params[:agency_id]))
+    render json: {}, status: 204
+  end
+
   private
 
   def government_id_detail_params

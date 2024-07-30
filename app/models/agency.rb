@@ -6,6 +6,8 @@ class Agency < EmployerRecord
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   has_many :inquiries
   has_many :buyers, through: :item_statuses
+  has_many :salesperson_agency_linkings
+  has_many :linked_salespersons, through: :salesperson_agency_linkings, source: :salesperson
 
   def folder_name
     "Agency_#{agency_record.name}_#{agency_record.id}"

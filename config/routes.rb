@@ -73,9 +73,16 @@ Rails.application.routes.draw do
   #testing
   get "/test", to: "test#hello"
   resources :contact_us
-  put "/contract/generate", to: "contract#generate_contract" 
+  put "/contract/generate", to: "contract#generate_contract"
   get "/contract/download/docx", to: "contract#download_as_docx"
   get "/contract/download/pdf", to: "contract#download_as_pdf"
+
+  #add routes to raise a linking request from salesperson to agency
+  post "/salesperson_linking_request", to: "salesperson#raise_salesperson_linking_request"
+  #add routes to list all linking requests for an agency
+  get "/salesperson_linking_requests", to: "agency#list_salesperson_linking_requests"
+  #add routes to approve a linking request from salesperson to agency
+  patch "/approve_salesperson_linking_request", to: "agency#approve_salesperson_linking_request"
 end
 
 

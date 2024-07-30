@@ -101,6 +101,22 @@ module BusinessLogic
       s3.create_folder(agency_s3_path)
     end
 
+    def list_salesperson_linking_requests
+      record.salesperson_agency_linkings.as_json
+    end
+
+    def approve_salesperson_linking_request(linking_id, approval)
+      salesperson_agency_linking = record.salesperson_agency_linkings.find_by(id: linking_id)
+      raise "Invalid Linking Id" if salesperson_agency_linking.blank?
+      if approval == "approved"
+        salesperson_agency_linking.update!(is_verified: true)
+      elsif approval == "rejected"
+        salesperson_agency_linking.destroy!
+      else
+        raise "Invalid Approval Status"
+      end
+    end
+
     private
 
     def derive_item_obj_class(item_type)
