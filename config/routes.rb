@@ -74,8 +74,8 @@ Rails.application.routes.draw do
   get "/test", to: "test#hello"
   resources :contact_us
   put "/contract/generate", to: "contract#generate_contract" 
-  get "/contract/download/docx", to: "contract#download_as_docx"
-  get "/contract/download/pdf", to: "contract#download_as_pdf"
+  get "/contract/download/docx/:registration_id", to: "contract#download_as_docx"
+  get "/contract/download/pdf/:registration_id", to: "contract#download_as_pdf"
 end
 
 
