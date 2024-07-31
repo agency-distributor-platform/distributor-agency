@@ -74,6 +74,22 @@ class AgencyController < AuthenticationController
     render json: {data: data, pageable: meta}
   end
 
+  #implement list_salesperson_linking_requests
+  def list_salesperson_linking_requests
+    linkings = []
+    agency.list_salesperson_linking_requests.each { |linking|
+      linking[:salesperson_id] = convert_id_to_uuid(linking["salesperson_id"])
+      linking[:agency_id] = convert_id_to_uuid(linking["agency_id"])
+      linkings.push(linking)
+    }
+    render json: linkings, status: 200
+  end
+
+  def approve_salesperson_linking_request
+    agency.approve_salesperson_linking_request(params[:linking_id], params[:approval])
+    render json: {}, status: 204
+  end
+
   private
 
   def set_agency_obj

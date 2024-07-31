@@ -30,6 +30,27 @@ class SalespersonController < AuthenticationController
     salesperson.create_referral(government_id_detail_params)
   end
 
+  def raise_salesperson_linking_request
+    salesperson.raise_linking_request(convert_uuid_to_id(params[:agency_id]))
+    render json: {}, status: 204
+  end
+
+  def linked_agencies_vehicles
+    linked_agencies = salesperson.linked_agencies
+    filter_hash = {item_type: "Vehicle", agency: linked_agencies}
+    data, meta = ItemService::ItemStatusObj.get_items(filter_hash)
+    render json: {data: data, pageable: meta}
+  end
+
+  def linked_agencies
+    linked_agencies = []
+    salesperson.linked_agencies.as_json.each { |agency|
+      agency.merge!(id: convert_id_to_uuid(agency['id']))
+      linked_agencies.push(agency)
+    }
+    render json: linked_agencies, status: 200
+  end
+
   private
 
   def government_id_detail_params

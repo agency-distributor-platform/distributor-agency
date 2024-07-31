@@ -26,6 +26,17 @@ module BusinessLogic
       })
     end
 
+    def linked_agencies
+      record.linked_agencies
+    end
+
+    def raise_linking_request(agency_id)
+      SalespersonAgencyLinking.create!({
+        salesperson_id: record_id,
+        agency_id:
+      }) if record.linked_agencies.where(id: agency_id).blank?
+    end
+
     private
 
     def derive_model(item_type)
