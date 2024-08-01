@@ -102,7 +102,13 @@ module BusinessLogic
     end
 
     def list_salesperson_linking_requests
-      record.salesperson_agency_linkings.as_json
+      linkings = []
+      record.salesperson_agency_linkings.as_json.each { |linking|
+        salesperson = Salesperson.find_by(id: linking["salesperson_id"]).as_json
+        linking[:salesperson_details] = salesperson
+        linkings.push(linking)
+      }
+      linkings
     end
 
     def approve_salesperson_linking_request(linking_id, approval)
