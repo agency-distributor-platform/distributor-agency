@@ -94,6 +94,13 @@ module ItemService
       record.save!
     end
 
+    def get_buyer_details
+      buyer_obj = BusinessLogic::BuyerObj.new({})
+      buyer_photos_json = buyer_obj.get_buyer_photos(record.item_id)
+      buyer_info_json = record.buyer.as_json
+      return buyer_info_json, buyer_photos_json
+    end 
+
     def agency
       BusinessLogic::AgencyObj.new(record.agency)
     end

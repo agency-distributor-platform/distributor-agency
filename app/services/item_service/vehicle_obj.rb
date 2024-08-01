@@ -49,6 +49,15 @@ module ItemService
       files = s3_adapter.list_files(vehicle_photos_path)
       { files: files.map { |file| {filename: file, publi_url: s3_adapter.public_url(file)} } }
     end
+
+    def get_buyers_photo_hash
+      files = s3_adapter.list_files(vehicle_buyer_photo_path)
+      buyer_photos = files.each_with_object({}) do |file, hash|
+        filename_without_extension = File.basename(file, File.extname(file))
+        hash[filename_without_extension] = s3_adapter.public_url(file)
+      end
+    end
+
     # TO-DO : refactor to use single method to get any type of photos
     def get_add_on_photos(add_on_id)
       photos_path = "#{vehicle_other_files_path}/add_ons/#{add_on_id}"

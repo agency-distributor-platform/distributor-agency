@@ -21,6 +21,12 @@ module BusinessLogic
       end 
     end
 
+    def get_buyer_photos(vehicle_id)
+      set_vehcile_obj(vehicle_id)
+      photos_hash = @vehicle_obj.get_buyers_photo_hash
+      return photos_hash
+    end 
+
     def record_id
       record.id
     end
@@ -28,6 +34,10 @@ module BusinessLogic
     def as_json
       record.as_json_with_converted_id
     end
+
+    def get_photo(photo_name)
+      @vehicle_obj.get_photo(photo_name)
+    end 
 
     def upload_pancard_photo(photo)
       upload_photo(photo, 'pancard')

@@ -85,6 +85,8 @@ Rails.application.routes.draw do
   get "/salesperson_linking_requests", to: "agency#list_salesperson_linking_requests"
   #add routes to approve a linking request from salesperson to agency
   patch "/approve_salesperson_linking_request", to: "agency#approve_salesperson_linking_request"
+  #get buyer details for individual vehicle
+  get "/vehicles/:vehicle_id/buyer_details", to: "vehicles#get_buyer_details"
 end
 
 
