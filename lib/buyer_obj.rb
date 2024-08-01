@@ -11,13 +11,21 @@ module BusinessLogic
       pancard_photo = buyer_details.delete(:pancard_photo)
       adharcard_back_photo = buyer_details.delete(:adharcard_back_photo)
       adharcard_front_photo = buyer_details.delete(:adharcard_front_photo)
+      signature_photo = buyer_details.delete(:signature_photo)
       record.update(buyer_details)
       if vehicle_id.present?
         set_vehcile_obj(vehicle_id)
+        upload_pancard_photo(pancard_photo) if pancard_photo.present? 
+        upload_signature_photo(signature_photo) if signature_photo.present? 
         upload_adharcard_photos(adharcard_back_photo, adharcard_front_photo) if adharcard_back_photo.present? && adharcard_front_photo.present?
-        upload_pancard_photo(pancard_photo) if pancard_photo.present? && pancard_photo.present?      
       end 
     end
+
+    def get_buyer_photos(vehicle_id)
+      set_vehcile_obj(vehicle_id)
+      photos_hash = @vehicle_obj.get_buyers_photo_hash
+      return photos_hash
+    end 
 
     def record_id
       record.id
@@ -27,9 +35,17 @@ module BusinessLogic
       record.as_json_with_converted_id
     end
 
+    def get_photo(photo_name)
+      @vehicle_obj.get_photo(photo_name)
+    end 
+
     def upload_pancard_photo(photo)
       upload_photo(photo, 'pancard')
     end
+
+    def upload_signature_photo(photo)
+      upload_photo(photo, 'signature')
+    end 
     
     def upload_adharcard_photos(back_photo, front_photo)
       upload_photo(back_photo, 'adhar_back')

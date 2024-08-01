@@ -77,6 +77,13 @@ class VehiclesController < AuthenticationController
     render json:{message: 'success'}, status: 204
   end
 
+  def get_buyer_details
+    vehicle_obj = ItemService::VehicleObj.new({id: params[:vehicle_id]})
+    vehicle_item_status_obj = vehicle_obj.item_status_obj
+    buyer_details, buyer_photos = vehicle_item_status_obj.get_buyer_details
+    render json: {buyer_details: , buyer_photos: }, status: 200
+  end 
+
   def get_vehicle_transactions
     vehicle_obj = ItemService::VehicleObj.new({id: params[:vehicle_id]})
     vehicle_item_status_obj = vehicle_obj.item_status_obj
@@ -89,6 +96,7 @@ class VehiclesController < AuthenticationController
       }, status: 403
     end
   end
+
 
   def delete
     vehicle = Vehicle.find_by(id: params[:vehicle_id])
@@ -161,7 +169,7 @@ class VehiclesController < AuthenticationController
   end
 
   def buyer_params
-    params.require(:buyer_details).permit(:id, :name, :user_metadata, :address, :city, :state, :pincode, :addhar, :pan, :father_name, :mother_name, :phone, :title, :pancard_photo, :adharcard_front_photo, :adharcard_back_photo)
+    params.require(:buyer_details).permit(:id, :name, :user_metadata, :address, :city, :state, :pincode, :addhar, :pan, :father_name, :mother_name, :phone, :title, :pancard_photo, :adharcard_front_photo, :adharcard_back_photo, :signature_photo)
   end
 
   def transaction_params

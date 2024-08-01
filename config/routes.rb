@@ -76,8 +76,8 @@ Rails.application.routes.draw do
   get "/test", to: "test#hello"
   resources :contact_us
   put "/contract/generate", to: "contract#generate_contract"
-  get "/contract/download/docx", to: "contract#download_as_docx"
-  get "/contract/download/pdf", to: "contract#download_as_pdf"
+  get "/contract/download/docx/:registration_id", to: "contract#download_as_docx"
+  get "/contract/download/pdf/:registration_id", to: "contract#download_as_pdf"
 
   #add routes to raise a linking request from salesperson to agency
   post "/salesperson_linking_request", to: "salesperson#raise_salesperson_linking_request"
@@ -85,6 +85,8 @@ Rails.application.routes.draw do
   get "/salesperson_linking_requests", to: "agency#list_salesperson_linking_requests"
   #add routes to approve a linking request from salesperson to agency
   patch "/approve_salesperson_linking_request", to: "agency#approve_salesperson_linking_request"
+  #get buyer details for individual vehicle
+  get "/vehicles/:vehicle_id/buyer_details", to: "vehicles#get_buyer_details"
 end
 
 
