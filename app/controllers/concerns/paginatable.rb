@@ -24,8 +24,8 @@ module Paginatable
 
     def non_query_paginate(data)
       #1-based indexing for page, so converting it to 0-based indexing
-      page = params[:page]
-      per_page = params[:per_page]
+      page = params[:page].to_i
+      per_page = params[:per_page].to_i
       start_index = (page - 1) * per_page
       [data[start_index, per_page] || [], metadata(data.length, page, per_page)]
     end
