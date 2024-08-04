@@ -37,6 +37,20 @@ module BusinessLogic
       }) if record.linked_agencies.where(id: agency_id).blank?
     end
 
+    def get_earnings
+      revenue = 0
+      record.item_statuses.each { |item|
+        item_status_obj = ItemService::ItemStatusObj.new(item)
+        revenue = revenue + item_status_obj.salesperson_share
+      }
+
+      {
+        revenue_on_paper: revenue,
+        total_revenue: revenue
+      }
+    end
+
+
     private
 
     def derive_model(item_type)
