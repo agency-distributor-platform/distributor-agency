@@ -116,8 +116,10 @@ module BusinessLogic
       raise "Invalid Linking Id" if salesperson_agency_linking.blank?
       if approval == "approved"
         salesperson_agency_linking.update!(is_verified: true)
+        salesperson_agency_linking.update!(rejected: false)
       elsif approval == "rejected"
-        salesperson_agency_linking.destroy!
+        salesperson_agency_linking.update!(is_verified: false)
+        salesperson_agency_linking.update!(rejected: true)
       else
         raise "Invalid Approval Status"
       end
