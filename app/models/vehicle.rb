@@ -5,6 +5,7 @@ class Vehicle < ApplicationRecord
   has_one :agency, through: :item_status
   has_one :distributor, through: :item_status
   has_one :buyer, through: :item_status
+  has_one :status, through: :item_status
 
   validates :registration_id, presence: true, uniqueness: true
   validates :chassis_id, presence: true, uniqueness: true

@@ -1,6 +1,7 @@
 require "#{Rails.root}/lib/all_business_logic"
 
 class SalespersonController < AuthenticationController
+  include Paginatable
   include BusinessLogic
   attr_accessor :salesperson
   before_action :set_salesperson_obj
@@ -44,11 +45,27 @@ class SalespersonController < AuthenticationController
 
   def linked_agencies
     linked_agencies = []
-    salesperson.linked_agencies.as_json.each { |agency|
+    data, meta = paginate(salesperson.linked_agencies)
+    data.as_json.each { |agency|
       agency.merge!(id: convert_id_to_uuid(agency['id']))
       linked_agencies.push(agency)
     }
-    render json: linked_agencies, status: 200
+    render json: {data: linked_agencies, pageable: meta}, status: 200
+  end
+
+  def list_agency_linking_requests
+    approved_data, approved_meta = paginate(salesperson.linking_requests({is_verified: true}))
+    pending_data, pending_meta = paginate(salesperson.linking_requests({is_verified: false, rejected: false}))
+    rejected_data, rejected_meta = paginate(salesperson.linking_requests({rejected: true}))
+    render json: {data: {
+      approved_data: approved_data,
+      pending_data: pending_data,
+      rejected_data: rejected_data
+    }, pageable: {
+      approved_pageable: approved_meta,
+      pending_pageable: pending_meta,
+      rejected_pageable: rejected_meta
+    }}, status: 200
   end
 
   private

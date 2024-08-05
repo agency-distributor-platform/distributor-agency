@@ -101,9 +101,9 @@ module BusinessLogic
       s3.create_folder(agency_s3_path)
     end
 
-    def list_salesperson_linking_requests
+    def list_salesperson_linking_requests(linking_request_filter)
       linkings = []
-      record.salesperson_agency_linkings.as_json.each { |linking|
+      record.salesperson_agency_linkings.where(linking_request_filter).as_json.each { |linking|
         salesperson = Salesperson.find_by(id: linking["salesperson_id"]).as_json
         linking[:salesperson_details] = salesperson
         linkings.push(linking)
@@ -116,8 +116,10 @@ module BusinessLogic
       raise "Invalid Linking Id" if salesperson_agency_linking.blank?
       if approval == "approved"
         salesperson_agency_linking.update!(is_verified: true)
+        salesperson_agency_linking.update!(rejected: false)
       elsif approval == "rejected"
-        salesperson_agency_linking.destroy!
+        salesperson_agency_linking.update!(is_verified: false)
+        salesperson_agency_linking.update!(rejected: true)
       else
         raise "Invalid Approval Status"
       end

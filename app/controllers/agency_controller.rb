@@ -2,6 +2,7 @@ require "#{Rails.root}/lib/all_business_logic"
 
 class AgencyController < AuthenticationController
 
+  include Paginatable
   include BusinessLogic
   attr_accessor :agency
   before_action :set_agency_obj
@@ -76,13 +77,38 @@ class AgencyController < AuthenticationController
 
   #implement list_salesperson_linking_requests
   def list_salesperson_linking_requests
-    linkings = []
-    agency.list_salesperson_linking_requests.each { |linking|
+    approved_linkings = []
+    pending_linkings = []
+    rejected_linkings = []
+    approved_data, approved_meta = non_query_paginate(agency.list_salesperson_linking_requests({is_verified: true}))
+    approved_data.each { |linking|
       linking[:salesperson_id] = convert_id_to_uuid(linking["salesperson_id"])
       linking[:agency_id] = convert_id_to_uuid(linking["agency_id"])
-      linkings.push(linking)
+      approved_linkings.push(linking)
     }
-    render json: linkings, status: 200
+
+    pending_data, pending_meta = non_query_paginate(agency.list_salesperson_linking_requests({is_verified: false, rejected: false}))
+    pending_data.each { |linking|
+      linking[:salesperson_id] = convert_id_to_uuid(linking["salesperson_id"])
+      linking[:agency_id] = convert_id_to_uuid(linking["agency_id"])
+      pending_linkings.push(linking)
+    }
+
+    rejected_data, rejected_meta = non_query_paginate(agency.list_salesperson_linking_requests({rejected: true}))
+    rejected_data.each { |linking|
+      linking[:salesperson_id] = convert_id_to_uuid(linking["salesperson_id"])
+      linking[:agency_id] = convert_id_to_uuid(linking["agency_id"])
+      rejected_linkings.push(linking)
+    }
+    render json: {data: {
+      approved_data: approved_data,
+      pending_data: pending_data,
+      rejected_data: rejected_data
+    }, pageable: {
+      approved_pageable: approved_meta,
+      pending_pageable: pending_meta,
+      rejected_pageable: rejected_meta
+    }}, status: 200
   end
 
   def approve_salesperson_linking_request

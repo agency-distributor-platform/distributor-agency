@@ -40,7 +40,7 @@ class ItemController < AuthenticationController
     employer_obj =  if verify_agency_obj
                       BusinessLogic::AgencyObj.new(employer.as_json.deep_symbolize_keys)
                     else
-                      BusinessLogic::DistributorObj.new(employer.as_json.deep_symbolize_keys)
+                      BusinessLogic::SalespersonObj.new(employer.as_json.deep_symbolize_keys)
                     end
     render json: {earnings: employer_obj.get_earnings}
   end
