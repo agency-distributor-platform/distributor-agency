@@ -54,13 +54,39 @@ class SalespersonController < AuthenticationController
   end
 
   def list_agency_linking_requests
-    approved_data, approved_meta = paginate(salesperson.linking_requests({is_verified: true}))
-    pending_data, pending_meta = paginate(salesperson.linking_requests({is_verified: false, rejected: false}))
-    rejected_data, rejected_meta = paginate(salesperson.linking_requests({rejected: true}))
+    approved_linkings = []
+    pending_linkings = []
+    rejected_linkings = []
+    approved_data, approved_meta = non_query_paginate(salesperson.linking_requests({is_verified: true}))
+    approved_data.each { |linking|
+      linking[:salesperson_id] = convert_id_to_uuid(linking["salesperson_id"])
+      linking[:agency_id] = convert_id_to_uuid(linking["agency_id"])
+      linking[:agency_details] = Agency.find_by(id: linking["agency_id"]).as_json
+      linking[:salesperson_details] = Salesperson.find_by(id: linking["salesperson_id"]).as_json
+      approved_linkings.push(linking)
+    }
+
+    pending_data, pending_meta = non_query_paginate(salesperson.linking_requests({is_verified: false, rejected: false}))
+    pending_data.each { |linking|
+      linking[:salesperson_id] = convert_id_to_uuid(linking["salesperson_id"])
+      linking[:agency_id] = convert_id_to_uuid(linking["agency_id"])
+      linking[:agency_details] = Agency.find_by(id: linking["agency_id"]).as_json
+      linking[:salesperson_details] = Salesperson.find_by(id: linking["salesperson_id"]).as_json
+      pending_linkings.push(linking)
+    }
+
+    rejected_data, rejected_meta = non_query_paginate(salesperson.linking_requests({rejected: true}))
+    rejected_data.each { |linking|
+      linking[:salesperson_id] = convert_id_to_uuid(linking["salesperson_id"])
+      linking[:agency_id] = convert_id_to_uuid(linking["agency_id"])
+      linking[:agency_details] = Agency.find_by(id: linking["agency_id"]).as_json
+      linking[:salesperson_details] = Salesperson.find_by(id: linking["salesperson_id"]).as_json
+      rejected_linkings.push(linking)
+    }
     render json: {data: {
-      approved_data: approved_data,
-      pending_data: pending_data,
-      rejected_data: rejected_data
+      approved_data: approved_linkings,
+      pending_data: pending_linkings,
+      rejected_data: rejected_linkings
     }, pageable: {
       approved_pageable: approved_meta,
       pending_pageable: pending_meta,

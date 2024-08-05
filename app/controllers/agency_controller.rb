@@ -84,6 +84,8 @@ class AgencyController < AuthenticationController
     approved_data.each { |linking|
       linking[:salesperson_id] = convert_id_to_uuid(linking["salesperson_id"])
       linking[:agency_id] = convert_id_to_uuid(linking["agency_id"])
+      linking[:agency_details] = Agency.find_by(id: linking["agency_id"]).as_json
+      linking[:salesperson_details] = Salesperson.find_by(id: linking["salesperson_id"]).as_json
       approved_linkings.push(linking)
     }
 
@@ -91,6 +93,8 @@ class AgencyController < AuthenticationController
     pending_data.each { |linking|
       linking[:salesperson_id] = convert_id_to_uuid(linking["salesperson_id"])
       linking[:agency_id] = convert_id_to_uuid(linking["agency_id"])
+      linking[:agency_details] = Agency.find_by(id: linking["agency_id"]).as_json
+      linking[:salesperson_details] = Salesperson.find_by(id: linking["salesperson_id"]).as_json
       pending_linkings.push(linking)
     }
 
@@ -98,6 +102,8 @@ class AgencyController < AuthenticationController
     rejected_data.each { |linking|
       linking[:salesperson_id] = convert_id_to_uuid(linking["salesperson_id"])
       linking[:agency_id] = convert_id_to_uuid(linking["agency_id"])
+      linking[:agency_details] = Agency.find_by(id: linking["agency_id"]).as_json
+      linking[:salesperson_details] = Salesperson.find_by(id: linking["salesperson_id"]).as_json
       rejected_linkings.push(linking)
     }
     render json: {data: {
