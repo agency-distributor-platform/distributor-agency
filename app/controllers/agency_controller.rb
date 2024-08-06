@@ -77,44 +77,42 @@ class AgencyController < AuthenticationController
 
   #implement list_salesperson_linking_requests
   def list_salesperson_linking_requests
-    approved_linkings = []
-    pending_linkings = []
-    rejected_linkings = []
-    approved_data, approved_meta = non_query_paginate(agency.list_salesperson_linking_requests({is_verified: true}))
-    approved_data.each { |linking|
+    if params[:type_of_requests].blank?
+      raise "Type of requests not present"
+    end
+    linkings = []
+
+    is_verified = params[:type_of_requests] == "approved" ? true : false
+    rejected = params[:type_of_requests] == "rejected" ? true : false
+    if params[:type_of_requests] == "pending"
+      is_verified = false
+      rejected = false
+    end
+
+    filter_hash = {}
+
+    if is_verified
+      filter_hash[:is_verified] = true
+    elsif rejected
+      filter_hash[:rejected] = true
+    else
+      filter_hash[:is_verified] = false
+      filter_hash[:rejected] = false
+    end
+
+    data, meta = non_query_paginate(agency.list_salesperson_linking_requests(filter_hash))
+    data.each { |linking|
       linking[:salesperson_id] = convert_id_to_uuid(linking["salesperson_id"])
       linking[:agency_id] = convert_id_to_uuid(linking["agency_id"])
       linking[:agency_details] = Agency.find_by(id: linking["agency_id"]).as_json
       linking[:salesperson_details] = Salesperson.find_by(id: linking["salesperson_id"]).as_json
-      approved_linkings.push(linking)
+      linkings.push(linking)
     }
 
-    pending_data, pending_meta = non_query_paginate(agency.list_salesperson_linking_requests({is_verified: false, rejected: false}))
-    pending_data.each { |linking|
-      linking[:salesperson_id] = convert_id_to_uuid(linking["salesperson_id"])
-      linking[:agency_id] = convert_id_to_uuid(linking["agency_id"])
-      linking[:agency_details] = Agency.find_by(id: linking["agency_id"]).as_json
-      linking[:salesperson_details] = Salesperson.find_by(id: linking["salesperson_id"]).as_json
-      pending_linkings.push(linking)
-    }
-
-    rejected_data, rejected_meta = non_query_paginate(agency.list_salesperson_linking_requests({rejected: true}))
-    rejected_data.each { |linking|
-      linking[:salesperson_id] = convert_id_to_uuid(linking["salesperson_id"])
-      linking[:agency_id] = convert_id_to_uuid(linking["agency_id"])
-      linking[:agency_details] = Agency.find_by(id: linking["agency_id"]).as_json
-      linking[:salesperson_details] = Salesperson.find_by(id: linking["salesperson_id"]).as_json
-      rejected_linkings.push(linking)
-    }
-    render json: {data: {
-      approved_data: approved_data,
-      pending_data: pending_data,
-      rejected_data: rejected_data
-    }, pageable: {
-      approved_pageable: approved_meta,
-      pending_pageable: pending_meta,
-      rejected_pageable: rejected_meta
-    }}, status: 200
+    render json: {
+      data: linkings,
+      pageable: meta,
+    }, status: 200
   end
 
   def approve_salesperson_linking_request
