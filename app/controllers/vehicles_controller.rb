@@ -29,7 +29,9 @@ class VehiclesController < AuthenticationController
   end
 
   def get_vehicles
-    status = Status.find_by(name: params[:status])
+    status_name = ["Added", "Available", "Booked"]
+    status = Status.where(name: status_name)
+    # status = Status.find_by(name: params[:status])
     if salesperson.present?
       filter_hash = {item_type: "Vehicle"}
       filter_hash[:status] = status if status.present?
