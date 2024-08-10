@@ -13,14 +13,14 @@ default: &default
   adapter: mysql2
   encoding: utf8mb4
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: root
-  password: root
-  host: mysqldb
+  username: agency_admin
+  password: OsRIvUogyKBSVhJ09fGJ
+  host: agency-distributor.cnyukkiq4d51.ap-south-1.rds.amazonaws.com
   wait_timeout: 1000
 
 development:
   <<: *default
-  database: distributor_agency_platform_api_dev
+  database: distributor_agency_platform_api_development
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
