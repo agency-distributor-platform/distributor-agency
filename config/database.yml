@@ -43,7 +43,6 @@ test:
   # the values provided in this file. Alternatively, you can specify a connection
   # URL environment variable explicitly:
   #
-  
 production:
   <<: *default
   database: distributor_agency_platform_api_prod
