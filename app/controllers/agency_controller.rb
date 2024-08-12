@@ -58,7 +58,8 @@ class AgencyController < AuthenticationController
   end
 
   def get_sold_vehicles
-    status = Status.find_by(name: "Sold")
+    status_name = ["Sold", "Sold with due amount"]
+    status = Status.where(name: status_name)
     filter_hash = {item_type: "Vehicle", status: , agency: agency.record}
     filter_hash[:page] = params[:page]
     filter_hash[:per_page] = params[:per_page]
