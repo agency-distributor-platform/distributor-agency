@@ -72,6 +72,7 @@ Rails.application.routes.draw do
 
   resources :add_ons
   post "/vehicles/filter", to: "vehicles#filter_results"
+  post "/agency/filter", to: "agency#filter_results"
   #testing
   get "/test", to: "test#hello"
   resources :contact_us
