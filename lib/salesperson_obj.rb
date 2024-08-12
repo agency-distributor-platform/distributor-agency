@@ -30,6 +30,10 @@ module BusinessLogic
       record.linked_agencies
     end
 
+    def verified_linked_agencies
+      record.salesperson_agency_linkings.where(is_verified: true).map(&:agency)
+    end
+
     def raise_linking_request(agency_id)
       SalespersonAgencyLinking.create!({
         salesperson_id: record_id,

@@ -169,6 +169,7 @@ class AuthenticationController < ApplicationController
     user_details["user_type_details"] = user_record.employer.as_json
     user_details["user_type_details"]["id"] = convert_id_to_uuid(user_details["user_type_details"]["id"])
     user_details["user_type_details"]["agency_id"] = convert_id_to_uuid(user_details["user_type_details"]["agency_id"]) if user_details["user_type_details"]["agency_id"].present?
+    user_details["linked_to_agencies"] = user_record.employer.salesperson_agency_linkings.where(is_verified: true).present? if user_record.employer_type == "Salesperson"
 
     user_details
   end
