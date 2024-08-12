@@ -67,6 +67,39 @@ class AgencyController < AuthenticationController
     render json: {data: data, pageable: meta}
   end
 
+  def filter_params
+    params.require(:vehicles).permit(filters: {}).to_h.deep_symbolize_keys
+  end
+
+  def filter_results
+    filter_hash = filter_params[:filters]
+    filter_objs = Utils::FilterHashToFilterConverter.convert(filter_hash, Vehicle, {
+      expenses: :item_status
+    })
+
+    records = nil
+    filter_objs.each_with_index { |filter_obj, index|
+      filter_records = filter_obj.apply_filter
+      records = records.nil? ? Set.new(filter_records) : records & Set.new(filter_records)
+    }
+
+    ordered_records = records.sort_by { |record| -record.id }
+    item_status_records = []
+    ordered_records.to_a.each { |record|
+      item_status_record = record.item_status
+      item_status_records.push(ItemService::ItemStatusObj.get_item_hash(item_status_record))
+    }
+    Rails.logger.info "params - #{params}"
+    Rails.logger.info "page - #{params[:page]}"
+    Rails.logger.info "per_page - #{params[:per_page]}"
+    data, pageable = non_query_paginate(item_status_records)
+
+    render json: {
+      data: ,
+      pageable:
+    }
+  end
+
   def get_booked_vehicles
     status = Status.find_by(name: "Booked")
     filter_hash = {item_type: "Vehicle", status: , agency: agency.record}
