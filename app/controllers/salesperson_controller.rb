@@ -17,7 +17,7 @@ class SalespersonController < AuthenticationController
 
   def get_sold_vehicles
     status = Status.find_by(name: "Sold")
-    filter_hash = {item_type: "Vehicle", status: , salesperson: salesperson.record}
+    filter_hash = {item_type: "Vehicle", status: , salesperson: salesperson.record, page: params[:page], per_page: params[:per_page]}
     data, meta = ItemService::ItemStatusObj.get_items(filter_hash)
     render json: {
       data: data,
