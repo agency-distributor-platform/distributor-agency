@@ -38,7 +38,7 @@ class SalespersonController < AuthenticationController
 
   def linked_agencies_vehicles
     linked_agencies = salesperson.linked_agencies
-    filter_hash = {item_type: "Vehicle", agency: linked_agencies}
+    filter_hash = {item_type: "Vehicle", agency: linked_agencies, per_page: params[:per_page], page: params[:page]}
     data, meta = ItemService::ItemStatusObj.get_items(filter_hash)
     render json: {data: data, pageable: meta}
   end
