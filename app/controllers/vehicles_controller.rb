@@ -114,7 +114,7 @@ class VehiclesController < AuthenticationController
     filter_hash = filter_params[:filters]
     unless filter_hash[:status].present?
       filter_hash[:status] = Status.where(name: ["Added", "Available", "Booked"]).pluck(:id)
-    end 
+    end
     filter_hash[:agency] = salesperson.verified_linked_agencies.map { |linked_ageny| linked_ageny.id } if salesperson.present?
     filter_objs = Utils::FilterHashToFilterConverter.convert(filter_hash, Vehicle, {
       expenses: :item_status
