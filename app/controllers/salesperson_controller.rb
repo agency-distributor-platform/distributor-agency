@@ -18,13 +18,21 @@ class SalespersonController < AuthenticationController
   def get_sold_vehicles
     status = Status.find_by(name: "Sold")
     filter_hash = {item_type: "Vehicle", status: , salesperson: salesperson.record}
-    render json: ItemService::ItemStatusObj.get_items(filter_hash)
+    data, meta = ItemService::ItemStatusObj.get_items(filter_hash)
+    render json: {
+      data: data,
+      pageable: meta
+    }, status: :ok
   end
 
   def get_booked_vehicles
     status = Status.find_by(name: "Booked")
     filter_hash = {item_type: "Vehicle", status: , salesperson: salesperson.record}
-    render json: ItemService::ItemStatusObj.get_items(filter_hash)
+    data, meta = ItemService::ItemStatusObj.get_items(filter_hash)
+    render json: {
+      data: data,
+      pageable: meta
+    }, status: :ok
   end
 
   def create_referral

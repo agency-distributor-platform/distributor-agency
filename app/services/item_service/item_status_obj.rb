@@ -15,7 +15,7 @@ module ItemService
       results = []
       instance = new
       page, per_page = instance.get_page_and_remove_from_filter(filter_hash)
-      query = ItemStatus.includes(:status).includes(:distributor).includes(:salesperson).includes(:buyer).where(filter_hash).order("id #{id_ordering_type}")
+      query = ItemStatus.includes(:status).includes(:distributor).includes(:salesperson).includes(:buyer).includes(:selling_transactions).includes(:booking_transactions).where(filter_hash).order("id #{id_ordering_type}")
       data, meta = paginate(query, page, per_page)
       data.each { |record|
         results.push(get_item_hash(record))
@@ -25,11 +25,6 @@ module ItemService
 
     def self.get_item_hash(record)
       record_hash = record.as_json
-      if record.item_type == "Vehicle"
-        vehicle_obj = ItemService::VehicleObj.new({id: record.item_id}) rescue nil
-        record_hash["vehicle_model_details"] = record.item.vehicle_model.as_json rescue nil
-        record_hash[:photos] = vehicle_obj.get_photos rescue []
-      end
       record_hash["#{record_hash["item_type"]}_details"] = record.item.as_json
       record_hash["salesperson_details"] = record.salesperson.as_json_with_converted_id rescue nil
       record_hash.delete(:salesperson_id)
@@ -41,6 +36,11 @@ module ItemService
       record_hash["selling_price"] = record.selling_transactions.first.selling_price rescue "N/A"
       record_hash["distributor_share"] = record.distributor_share rescue 0
       record_hash["salesperson_share"] = record.salesperson_share rescue 0
+      if record.item_type == "Vehicle"
+        vehicle_obj = ItemService::VehicleObj.new({id: record.item_id}) rescue nil
+        record_hash["vehicle_model_details"] = record.item.vehicle_model.as_json rescue nil
+        record_hash[:photos] = vehicle_obj.get_photos rescue []
+      end
       record_hash
     end
 
