@@ -13,7 +13,7 @@ class InquiryController < AuthenticationController
   end
 
   def list
-    data, meta = paginate(Inquiry.where(agency_id: agency.record_id))
+    data, meta = paginate(Inquiry.where(agency_id: agency.record_id).order("id desc"))
     render json: {data: data, pageable: meta}, status: :ok
   end
 
