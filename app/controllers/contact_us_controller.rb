@@ -1,7 +1,7 @@
 class ContactUsController < ApplicationController
 
   def index
-    render json: {data: ContactUs.all}
+    render json: {data: ContactUs.all.order("id desc")}
   end
 
   def create

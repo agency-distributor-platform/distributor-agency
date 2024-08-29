@@ -63,7 +63,7 @@ class AgencyController < AuthenticationController
     filter_hash = {item_type: "Vehicle", status: , agency: agency.record}
     filter_hash[:page] = params[:page]
     filter_hash[:per_page] = params[:per_page]
-    data, meta = ItemService::ItemStatusObj.get_items(filter_hash)
+    data, meta = ItemService::ItemStatusObj.get_items(filter_hash, "DESC", "updated_at")
     render json: {data: data, pageable: meta}
   end
 
